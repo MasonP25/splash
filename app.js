@@ -1858,6 +1858,11 @@ navigator.serviceWorker.addEventListener("controllerchange", () => {
 });
 
 async function init() {
+  // Clean up any third-party SW caches (e.g. arcade site) that got registered on this domain
+  caches.keys().then(names => {
+    names.forEach(n => { if (n.startsWith("arcade-")) caches.delete(n); });
+  });
+
   navigator.serviceWorker.register("/splash/sw.js");
   navigator.serviceWorker.ready.then(() => {
     sendAdblockSetting();
