@@ -199,6 +199,42 @@ window.addEventListener("unhandledrejection", (event) => {
   });
 });
 
+const CLOAKS = {
+  default: { name: "Default", title: "SPLASH", favicon: "" },
+  gdocs: { name: "Google Docs", title: "Untitled document - Google Docs", favicon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
+  gslides: { name: "Google Slides", title: "Untitled presentation - Google Slides", favicon: "https://ssl.gstatic.com/docs/presentations/images/favicon5.ico" },
+  gsheets: { name: "Google Sheets", title: "Untitled spreadsheet - Google Sheets", favicon: "https://ssl.gstatic.com/docs/spreadsheets/images/favicon3.ico" },
+  classroom: { name: "Google Classroom", title: "Home", favicon: "https://ssl.gstatic.com/classroom/favicon.png" },
+  canvas: { name: "Canvas", title: "Dashboard", favicon: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" },
+  clever: { name: "Clever", title: "Clever | Portal", favicon: "https://assets.clever.com/resource/icons/favicon.ico" },
+  ixl: { name: "IXL", title: "IXL | Dashboard", favicon: "https://www.ixl.com/favicon.ico" },
+  deltamath: { name: "DeltaMath", title: "DeltaMath", favicon: "https://www.deltamath.com/favicon.ico" },
+  khan: { name: "Khan Academy", title: "Khan Academy | Free Online Courses", favicon: "https://cdn.kastatic.org/images/favicon.ico" },
+  wikipedia: { name: "Wikipedia", title: "Wikipedia, the free encyclopedia", favicon: "https://en.wikipedia.org/static/favicon/wikipedia.ico" },
+};
+
+function applySplashCloak(id) {
+  const c = CLOAKS[id];
+  if (!c || id === "default") {
+    document.title = "SPLASH";
+    const link = document.querySelector('link[rel="icon"]');
+    if (link) link.removeAttribute("href");
+    setSetting("splash:cloak", "");
+    return;
+  }
+  document.title = c.title;
+  let link = document.querySelector('link[rel="icon"]');
+  if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
+  link.href = c.favicon;
+  setSetting("splash:cloak", id);
+}
+
+// Apply saved cloak immediately
+const savedCloak = getSetting("splash:cloak", "") || "";
+if (savedCloak && CLOAKS[savedCloak]) {
+  applySplashCloak(savedCloak);
+}
+
 let panicKey = getSetting("splash:panicKey", "") || "";
 let wispUrl = getSetting("splash:wispUrl", "wss://wisp.rhw.one/") || "wss://wisp.rhw.one/";
 let adblockEnabled = getSetting("splash:adblockEnabled", null);
@@ -1568,6 +1604,7 @@ games: open the games menu
 games list: list all games
 game {gamename}: open a game (games menu needed)
 panic {key}: set ctrl+key panic close
+cloak {preset}: disguise tab (cloak list to see options)
 adblock {y/n}: enable or disable adblock
 preventclose {y/n}: toggle leave page warning
 home: confirm return to home (overlay only)
@@ -1709,6 +1746,36 @@ function handleCommand(value) {
     }
     setPanicKey(key);
     appendOutput(`Panic key set to ctrl+${key.toLowerCase()}`);
+    return;
+  }
+  if (lower === "cloak list") {
+    const current = getSetting("splash:cloak", "") || "default";
+    appendOutput("Available cloaks:", "#a0ffcf");
+    Object.keys(CLOAKS).forEach((id) => {
+      const c = CLOAKS[id];
+      const marker = id === current ? " [active]" : "";
+      appendOutput(`  ${id} — ${c.name}${marker}`);
+    });
+    appendOutput('Usage: cloak {name} (e.g. cloak gdocs)', "#d9ffe8");
+    return;
+  }
+  if (lower.startsWith("cloak ")) {
+    const preset = value.slice(6).trim().toLowerCase();
+    if (!CLOAKS[preset]) {
+      appendOutput(`Unknown cloak "${preset}". Type cloak list to see options`, "#ff6b6b");
+      return;
+    }
+    applySplashCloak(preset);
+    if (preset === "default") {
+      appendOutput("Cloak removed");
+    } else {
+      appendOutput(`Cloak set to ${CLOAKS[preset].name}`);
+    }
+    return;
+  }
+  if (lower === "cloak") {
+    const current = getSetting("splash:cloak", "") || "default";
+    appendOutput(`Current cloak: ${current}. Type cloak list for options`, "#a0ffcf");
     return;
   }
   if (lower.startsWith("adblock ")) {
@@ -2015,21 +2082,5 @@ if (proxyWatermark) {
     toggleOverlay();
   });
 }
-
-// Listen for tab cloak messages from proxied sites (e.g. Mason's Arcade)
-window.addEventListener("message", (e) => {
-  if (e.data && e.data.type === "arcade-cloak") {
-    if (e.data.title) {
-      document.title = e.data.title;
-    } else {
-      document.title = "SPLASH";
-    }
-    if (e.data.favicon) {
-      let link = document.querySelector('link[rel="icon"]');
-      if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
-      link.href = e.data.favicon;
-    }
-  }
-});
 
 init();
