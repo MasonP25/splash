@@ -235,6 +235,27 @@ if (savedCloak && CLOAKS[savedCloak]) {
   applySplashCloak(savedCloak);
 }
 
+// Listen for cloak signals from proxied sites via BroadcastChannel + postMessage
+try {
+  const cloakChannel = new BroadcastChannel("arcade-cloak");
+  cloakChannel.onmessage = (e) => {
+    if (e.data && e.data.title !== undefined) {
+      document.title = e.data.title || "SPLASH";
+      let link = document.querySelector('link[rel="icon"]');
+      if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
+      if (e.data.favicon) { link.href = e.data.favicon; } else { link.removeAttribute("href"); }
+    }
+  };
+} catch(e) {}
+window.addEventListener("message", (e) => {
+  if (e.data && e.data.type === "arcade-cloak" && e.data.title !== undefined) {
+    document.title = e.data.title || "SPLASH";
+    let link = document.querySelector('link[rel="icon"]');
+    if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
+    if (e.data.favicon) { link.href = e.data.favicon; } else { link.removeAttribute("href"); }
+  }
+});
+
 let panicKey = getSetting("splash:panicKey", "") || "";
 let wispUrl = getSetting("splash:wispUrl", "wss://wisp.rhw.one/") || "wss://wisp.rhw.one/";
 let adblockEnabled = getSetting("splash:adblockEnabled", null);
