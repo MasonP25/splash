@@ -2015,4 +2015,21 @@ if (proxyWatermark) {
     toggleOverlay();
   });
 }
+
+// Listen for tab cloak messages from proxied sites (e.g. Mason's Arcade)
+window.addEventListener("message", (e) => {
+  if (e.data && e.data.type === "arcade-cloak") {
+    if (e.data.title) {
+      document.title = e.data.title;
+    } else {
+      document.title = "SPLASH";
+    }
+    if (e.data.favicon) {
+      let link = document.querySelector('link[rel="icon"]');
+      if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
+      link.href = e.data.favicon;
+    }
+  }
+});
+
 init();
