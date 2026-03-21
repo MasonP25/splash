@@ -1279,6 +1279,7 @@ function goHome() {
   updateMode("mode-terminal");
   frame.src = "about:blank";
   setOverlayInput("");
+  termOutput.innerHTML = "";
   updatePrompt();
   focusInput();
 }
