@@ -2047,17 +2047,7 @@ async function init() {
 window.addEventListener("hashchange", () => {
   const token = window.location.hash.replace(/^#/, "");
   if (!token) {
-    const liveUrl = getDecodedLocation();
-    const fallback = liveUrl || currentTarget;
-    if (fallback) {
-      updateMode("mode-proxy");
-      setHashFromUrl(fallback);
-      if (overlayOpen) {
-        startLocationPolling();
-      }
-      return;
-    }
-    updateMode("mode-terminal");
+    goHome();
     return;
   }
   const injected = splashAllowInject ? getInjectedTarget(token) : null;
