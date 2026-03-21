@@ -200,7 +200,7 @@ window.addEventListener("unhandledrejection", (event) => {
 });
 
 const CLOAKS = {
-  default: { name: "Default", icon: "\uD83C\uDF0A", title: "SPLASH", favicon: "" },
+  default: { name: "Default", icon: "\uD83C\uDF0A", title: "SPLASH", favicon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>" },
   gdocs: { name: "Google Docs", icon: "\uD83D\uDCC4", title: "Untitled document - Google Docs", favicon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
   gslides: { name: "Google Slides", icon: "\uD83D\uDCCA", title: "Untitled presentation - Google Slides", favicon: "https://ssl.gstatic.com/docs/presentations/images/favicon5.ico" },
   gsheets: { name: "Google Sheets", icon: "\uD83D\uDCD7", title: "Untitled spreadsheet - Google Sheets", favicon: "https://ssl.gstatic.com/docs/spreadsheets/images/favicon3.ico" },
@@ -215,10 +215,12 @@ const CLOAKS = {
 
 function applySplashCloak(id) {
   const c = CLOAKS[id];
-  if (!c || id === "default") {
+  if (!c) return;
+  if (id === "default") {
     document.title = "SPLASH";
-    const link = document.querySelector('link[rel="icon"]');
-    if (link) link.removeAttribute("href");
+    let link = document.querySelector('link[rel="icon"]');
+    if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
+    link.href = c.favicon;
     setSetting("splash:cloak", "");
     return;
   }
@@ -229,11 +231,9 @@ function applySplashCloak(id) {
   setSetting("splash:cloak", id);
 }
 
-// Apply saved cloak immediately
+// Apply saved cloak immediately (default = wave emoji favicon)
 const savedCloak = getSetting("splash:cloak", "") || "";
-if (savedCloak && CLOAKS[savedCloak]) {
-  applySplashCloak(savedCloak);
-}
+applySplashCloak(savedCloak && CLOAKS[savedCloak] ? savedCloak : "default");
 
 // Listen for cloak signals from proxied sites via BroadcastChannel + postMessage
 try {
