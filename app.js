@@ -1935,7 +1935,7 @@ document.addEventListener("keydown", (event) => {
 
 document.addEventListener("click", (event) => {
   const target = event.target;
-  if (target instanceof Element && target.closest(".games-panel")) {
+  if (target instanceof Element && (target.closest(".games-panel") || target.closest("#add-link-overlay") || target.closest("#settings-panel"))) {
     return;
   }
   focusInput();
