@@ -87,6 +87,92 @@ const termPrefix = document.getElementById("term-prefix");
 const termCursor = document.getElementById("term-cursor");
 const termCursorMeasure = document.getElementById("term-cursor-measure");
 const proxyWatermark = document.getElementById("proxy-watermark");
+const tabList = document.getElementById("tab-list");
+const tabAddBtn = document.getElementById("tab-add");
+const navBack = document.getElementById("nav-back");
+const navRefresh = document.getElementById("nav-refresh");
+const navUrl = document.getElementById("nav-url");
+
+// ─── Tab system ───
+const tabs = [];
+let activeTabId = null;
+let tabIdCounter = 0;
+
+function createTab(url) {
+  const id = ++tabIdCounter;
+  const tab = { id, url: url || "", title: "New Tab" };
+  tabs.push(tab);
+  activeTabId = id;
+  renderTabs();
+  return tab;
+}
+
+function switchTab(id) {
+  const tab = tabs.find(t => t.id === id);
+  if (!tab) return;
+  // Save current tab state
+  const prev = tabs.find(t => t.id === activeTabId);
+  if (prev) {
+    prev.url = getDecodedLocation() || currentTarget || prev.url;
+  }
+  activeTabId = id;
+  renderTabs();
+  if (tab.url) {
+    openInFrame(tab.url);
+    updateNavUrl(tab.url);
+  }
+}
+
+function closeTab(id) {
+  const idx = tabs.findIndex(t => t.id === id);
+  if (idx === -1) return;
+  tabs.splice(idx, 1);
+  if (tabs.length === 0) {
+    goHome();
+    return;
+  }
+  if (activeTabId === id) {
+    const newIdx = Math.min(idx, tabs.length - 1);
+    switchTab(tabs[newIdx].id);
+  } else {
+    renderTabs();
+  }
+}
+
+function renderTabs() {
+  tabList.innerHTML = "";
+  tabs.forEach(tab => {
+    const el = document.createElement("button");
+    el.className = "tab" + (tab.id === activeTabId ? " active" : "");
+    const title = document.createElement("span");
+    title.className = "tab-title";
+    title.textContent = tab.title;
+    const close = document.createElement("span");
+    close.className = "tab-close";
+    close.textContent = "\u00d7";
+    close.addEventListener("click", (e) => { e.stopPropagation(); closeTab(tab.id); });
+    el.appendChild(title);
+    el.appendChild(close);
+    el.addEventListener("click", () => switchTab(tab.id));
+    tabList.appendChild(el);
+  });
+}
+
+function updateActiveTabInfo() {
+  const tab = tabs.find(t => t.id === activeTabId);
+  if (!tab) return;
+  const url = getDecodedLocation() || currentTarget || tab.url;
+  tab.url = url;
+  try {
+    tab.title = new URL(url).hostname.replace(/^www\./, "") || "New Tab";
+  } catch { tab.title = url ? "Loading..." : "New Tab"; }
+  renderTabs();
+  updateNavUrl(url);
+}
+
+function updateNavUrl(url) {
+  if (navUrl) navUrl.textContent = url || "";
+}
 
 const debugLogBuffer = [];
 const DEBUG_MAX_LOGS = 80;
@@ -493,8 +579,11 @@ function openTarget(raw, inNewTab) {
     openInNewTab(url);
     return;
   }
+  if (tabs.length === 0) createTab(url);
+  else { const t = tabs.find(t => t.id === activeTabId); if (t) t.url = url; }
   setHashFromUrl(url);
   openInFrame(url);
+  updateNavUrl(url);
 }
 
 async function setWispUrl(next) {
@@ -2012,7 +2101,33 @@ async function init() {
     if (overlayOpen) {
       startLocationPolling();
     }
+    updateActiveTabInfo();
   });
+
+  // Tab & nav bar controls
+  tabAddBtn.addEventListener("click", () => {
+    const tab = createTab("");
+    goHome();
+    activeTabId = tab.id;
+    renderTabs();
+    updateMode("mode-terminal");
+    focusInput();
+  });
+  navBack.addEventListener("click", () => {
+    try {
+      const win = frame.contentWindow;
+      if (win) win.history.back();
+    } catch(e) {}
+  });
+  navRefresh.addEventListener("click", () => {
+    try {
+      const win = frame.contentWindow;
+      if (win) win.location.reload();
+    } catch(e) {
+      if (currentTarget) openInFrame(currentTarget);
+    }
+  });
+
   const token = window.location.hash.replace(/^#/, "");
   if (token) {
     const injected = splashAllowInject ? getInjectedTarget(token) : null;
