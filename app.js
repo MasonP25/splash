@@ -2296,6 +2296,51 @@ if (proxyWatermark) {
 
   renderCloakOptions();
 
+  // Color theme
+  const THEMES = [
+    { name: "Purple", color: "#8b7aff", rgb: "139,122,255" },
+    { name: "Blue", color: "#4a9eff", rgb: "74,158,255" },
+    { name: "Cyan", color: "#38bdf8", rgb: "56,189,248" },
+    { name: "Green", color: "#4ade80", rgb: "74,222,128" },
+    { name: "Teal", color: "#2dd4bf", rgb: "45,212,191" },
+    { name: "Pink", color: "#f472b6", rgb: "244,114,182" },
+    { name: "Red", color: "#f87171", rgb: "248,113,113" },
+    { name: "Orange", color: "#fb923c", rgb: "251,146,60" },
+    { name: "Yellow", color: "#facc15", rgb: "250,204,21" },
+    { name: "White", color: "#e0e4f0", rgb: "224,228,240" },
+  ];
+
+  function applyTheme(color, rgb) {
+    document.documentElement.style.setProperty("--accent", color);
+    document.documentElement.style.setProperty("--accent-rgb", rgb);
+  }
+
+  const themeOptions = document.getElementById("theme-options");
+  if (themeOptions) {
+    const savedTheme = getSetting("splash:themeColor", "") || "#8b7aff";
+    const savedRgb = getSetting("splash:themeRgb", "") || "139,122,255";
+    if (savedTheme !== "#8b7aff") applyTheme(savedTheme, savedRgb);
+
+    function renderThemes() {
+      const current = getSetting("splash:themeColor", "") || "#8b7aff";
+      themeOptions.innerHTML = "";
+      THEMES.forEach((t) => {
+        const swatch = document.createElement("button");
+        swatch.className = "theme-swatch" + (t.color === current ? " active" : "");
+        swatch.style.background = t.color;
+        swatch.title = t.name;
+        swatch.addEventListener("click", () => {
+          applyTheme(t.color, t.rgb);
+          setSetting("splash:themeColor", t.color);
+          setSetting("splash:themeRgb", t.rgb);
+          renderThemes();
+        });
+        themeOptions.appendChild(swatch);
+      });
+    }
+    renderThemes();
+  }
+
   // Panic URL setting
   if (panicUrlSetting) {
     const input = document.createElement("input");

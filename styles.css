@@ -1,5 +1,6 @@
 @import"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Ubuntu+Mono:wght@400;700&display=swap";
 
+:root{--accent:#8b7aff;--accent-rgb:139,122,255}
 html,body{height:100%;margin:0;background:#0a0a0f;font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;color:#e0e4f0}
 body{background:radial-gradient(ellipse at top,#12121f 0%,#0a0a0f 60%,#050508 100%)}
 
@@ -11,7 +12,7 @@ body{background:radial-gradient(ellipse at top,#12121f 0%,#0a0a0f 60%,#050508 10
 #proxy-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,10,11,.5);opacity:0;pointer-events:none;transition:opacity .2s ease}
 #proxy-loading.show{opacity:1}
 #proxy-loading-art{display:flex;flex-direction:column;align-items:center;gap:16px}
-.loading-spinner{width:36px;height:36px;border:3px solid rgba(140,120,255,.15);border-top-color:#8b7aff;border-radius:50%;animation:spin .8s linear infinite}
+.loading-spinner{width:36px;height:36px;border:3px solid rgba(var(--accent-rgb),.15);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 .loading-text{font-size:14px;color:#8b8ba0;letter-spacing:.05em}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -26,28 +27,28 @@ body{background:radial-gradient(ellipse at top,#12121f 0%,#0a0a0f 60%,#050508 10
 
 /* ─── Landing (terminal mode) ─── */
 #splash-landing{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:28px}
-#splash-logo{font-size:3.2rem;font-weight:700;letter-spacing:10px;background:linear-gradient(135deg,#8b7aff 0%,#6ee7b7 50%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;user-select:none}
+#splash-logo{font-size:3.2rem;font-weight:700;letter-spacing:10px;background:linear-gradient(135deg,var(--accent) 0%,#6ee7b7 50%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;user-select:none}
 #splash-tagline{font-size:0.9rem;color:#6b6b80;letter-spacing:.1em;transition:opacity .4s ease;min-height:1.4em}
 
 #term-output{width:100%;max-width:560px;overflow:visible;font-size:14px;line-height:1.6;scrollbar-width:none;font-family:"Ubuntu Mono",monospace}
 #term-output::-webkit-scrollbar{width:0;height:0}
 
 #term-status{display:none;gap:8px;font-size:13px;color:#8b8ba0;margin-bottom:8px}
-.term-status-label{color:#8b7aff;text-transform:lowercase}
+.term-status-label{color:var(--accent);text-transform:lowercase}
 #term-location{color:#c0c4d8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60vw}
 
 /* ─── Search Bar ─── */
 #term-input-row{display:flex;align-items:center;width:100%;max-width:560px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px 20px;margin-top:0;position:relative;transition:border-color .2s,box-shadow .2s;box-sizing:border-box}
-#term-input-row:focus-within{border-color:rgba(139,122,255,.4);box-shadow:0 0 0 3px rgba(139,122,255,.1),0 8px 32px rgba(0,0,0,.3)}
+#term-input-row:focus-within{border-color:rgba(var(--accent-rgb),.4);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.1),0 8px 32px rgba(0,0,0,.3)}
 
-#term-prefix{color:#8b7aff;font-family:"Ubuntu Mono",monospace}
-#term-input{flex:1;background:transparent;border:none;outline:none;color:#e8eaf0;font-size:15px;font-family:"Inter",sans-serif;margin-left:0;caret-color:#8b7aff}
+#term-prefix{color:var(--accent);font-family:"Ubuntu Mono",monospace}
+#term-input{flex:1;background:transparent;border:none;outline:none;color:#e8eaf0;font-size:15px;font-family:"Inter",sans-serif;margin-left:0;caret-color:var(--accent)}
 #term-input::placeholder{color:#4a4a5a}
 #search-btn{background:none;border:none;color:#4a4a5a;cursor:pointer;padding:0 0 0 8px;display:flex;align-items:center;transition:color .2s}
-#search-btn:hover{color:#8b7aff}
+#search-btn:hover{color:var(--accent)}
 body.mode-proxy #search-btn{display:none}
 
-#term-cursor{position:absolute;top:50%;width:.62em;height:1.2em;background:#8b7aff;transform:translateY(-50%);pointer-events:none;animation:cursorBlink 1.1s steps(1) infinite}
+#term-cursor{position:absolute;top:50%;width:.62em;height:1.2em;background:var(--accent);transform:translateY(-50%);pointer-events:none;animation:cursorBlink 1.1s steps(1) infinite}
 #term-cursor.hidden{opacity:0;animation:none}
 #term-cursor-measure{position:absolute;visibility:hidden;white-space:pre;font:"Ubuntu Mono",monospace;padding:0;margin:0}
 @keyframes cursorBlink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
@@ -55,28 +56,28 @@ body.mode-proxy #search-btn{display:none}
 /* ─── Quick Links ─── */
 #quick-links{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px;max-width:560px}
 .qlink{position:relative;display:flex;align-items:center;padding:8px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;color:#b0b4c8;font-size:0.8rem;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;user-select:none}
-.qlink:hover{background:rgba(139,122,255,.1);border-color:rgba(139,122,255,.3);color:#e0e4f0;transform:translateY(-1px)}
+.qlink:hover{background:rgba(var(--accent-rgb),.1);border-color:rgba(var(--accent-rgb),.3);color:#e0e4f0;transform:translateY(-1px)}
 .qlink-x{display:none;position:absolute;top:-6px;right:-6px;width:16px;height:16px;border-radius:50%;background:rgba(255,80,80,.85);color:#fff;font-size:10px;line-height:16px;text-align:center;cursor:pointer;border:none;padding:0}
 .qlink:hover .qlink-x{display:block}
-.qlink-add{background:rgba(139,122,255,.08);border:1px dashed rgba(139,122,255,.3);color:#8b7aff;cursor:pointer;font-size:0.8rem;font-weight:600}
-.qlink-add:hover{background:rgba(139,122,255,.18);border-color:rgba(139,122,255,.5);color:#c0b8ff;transform:translateY(-1px)}
+.qlink-add{background:rgba(var(--accent-rgb),.08);border:1px dashed rgba(var(--accent-rgb),.3);color:var(--accent);cursor:pointer;font-size:0.8rem;font-weight:600}
+.qlink-add:hover{background:rgba(var(--accent-rgb),.18);border-color:rgba(var(--accent-rgb),.5);color:#e0e4f0;transform:translateY(-1px)}
 /* ─── Add Link Modal ─── */
 #add-link-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,20,.85);z-index:10000;align-items:center;justify-content:center}
 #add-link-overlay.open{display:flex}
 #add-link-modal{background:rgba(14,14,22,.97);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;width:280px;box-shadow:0 10px 40px rgba(0,0,0,.5);backdrop-filter:blur(12px)}
 #add-link-modal h3{margin:0 0 14px;font-size:0.95rem;font-weight:600;color:#e0e4f0}
 .add-link-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:9px 12px;color:#e0e4f0;font-size:0.85rem;font-family:"Inter",sans-serif;outline:none;box-sizing:border-box;margin-bottom:10px;transition:border-color .2s}
-.add-link-input:focus{border-color:rgba(139,122,255,.4)}
+.add-link-input:focus{border-color:rgba(var(--accent-rgb),.4)}
 .add-link-btns{display:flex;gap:8px;justify-content:flex-end}
 .add-link-btns button{border:none;border-radius:8px;padding:8px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all .15s}
 .add-link-cancel{background:rgba(255,255,255,.06);color:#8b8ba0}
 .add-link-cancel:hover{background:rgba(255,255,255,.1);color:#e0e4f0}
-.add-link-save{background:#8b7aff;color:#fff}
-.add-link-save:hover{background:#a08fff}
+.add-link-save{background:var(--accent);color:#fff}
+.add-link-save:hover{opacity:.85}
 
 /* ─── Settings Button & Panel ─── */
 #settings-btn{position:fixed;top:16px;right:16px;z-index:999;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#8b8ba0;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
-#settings-btn:hover{background:rgba(139,122,255,.1);border-color:rgba(139,122,255,.4);color:#e0e4f0;transform:scale(1.1)}
+#settings-btn:hover{background:rgba(var(--accent-rgb),.1);border-color:rgba(var(--accent-rgb),.4);color:#e0e4f0;transform:scale(1.1)}
 #settings-panel{display:none;position:fixed;top:66px;right:16px;z-index:1000;width:220px;max-height:420px;overflow-y:auto;background:rgba(14,14,22,.97);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;box-shadow:0 10px 40px rgba(0,0,0,.5);backdrop-filter:blur(12px);scrollbar-width:none}
 #settings-panel::-webkit-scrollbar{width:0}
 .settings-header{font-size:0.95rem;font-weight:600;color:#e0e4f0;margin-bottom:12px}
@@ -84,7 +85,7 @@ body.mode-proxy #search-btn{display:none}
 .settings-divider{border-top:1px solid rgba(255,255,255,.06);margin:10px 0}
 .cloak-option{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:#b0b4c8;font-size:0.82rem;cursor:pointer;transition:all .15s;border:2px solid transparent}
 .cloak-option:hover{background:rgba(255,255,255,.05)}
-.cloak-option.active{border-color:#8b7aff;color:#e0e4f0}
+.cloak-option.active{border-color:var(--accent);color:#e0e4f0}
 .cloak-option-icon{font-size:1rem;width:20px;text-align:center}
 .settings-action{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:#b0b4c8;font-size:0.82rem;cursor:pointer;transition:all .15s}
 .settings-action:hover{background:rgba(255,255,255,.05);color:#e0e4f0}
@@ -98,23 +99,23 @@ body.mode-proxy #settings-panel{display:none}
 
 /* ─── Games Panel ─── */
 .games-panel{margin:8px 0 12px;font-size:14px;line-height:1.55;font-family:"Ubuntu Mono",monospace}
-.games-section-title{color:#8b7aff;margin-top:6px}
+.games-section-title{color:var(--accent);margin-top:6px}
 .games-line{display:flex;align-items:center;gap:10px;padding:4px 8px;border-radius:8px;color:#c0c4d8;transition:background .15s}
-.games-line.is-selected{background:rgba(139,122,255,.15);color:#e8eaf0}
+.games-line.is-selected{background:rgba(var(--accent-rgb),.15);color:#e8eaf0}
 .games-line.is-clickable{cursor:pointer}
-.games-number{color:#8b7aff;width:3ch;text-align:right}
+.games-number{color:var(--accent);width:3ch;text-align:right}
 .games-empty{color:#5a5a6a;margin-left:12px}
 .games-hint{color:#5a5a6a;margin-top:8px}
-.games-match{background:rgba(139,122,255,.2);color:#e0e4f0;padding:0 2px;border-radius:4px}
+.games-match{background:rgba(var(--accent-rgb),.2);color:#e0e4f0;padding:0 2px;border-radius:4px}
 
 /* ─── Links ─── */
-#term-output a{color:#8b7aff;text-decoration:none}
+#term-output a{color:var(--accent);text-decoration:none}
 #term-output a:hover{text-decoration:underline;color:#a89aff}
 
 /* ─── Landing mode: hide terminal chrome ─── */
 body.mode-terminal #term-prefix{display:none}
 body.mode-terminal #term-cursor{display:none}
-body.mode-terminal #term-input{caret-color:#8b7aff}
+body.mode-terminal #term-input{caret-color:var(--accent)}
 body.mode-terminal #terminal-shell{transform:translateY(0);pointer-events:auto;background:transparent}
 body.mode-terminal .term-pre{display:none}
 
@@ -132,9 +133,15 @@ body.mode-proxy #widgets{display:none}
 
 /* ─── Settings: Panic URL input ─── */
 .panic-url-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:7px 10px;color:#e0e4f0;font-size:0.82rem;font-family:"Inter",sans-serif;outline:none;box-sizing:border-box;transition:border-color .2s}
-.panic-url-input:focus{border-color:rgba(139,122,255,.4)}
+.panic-url-input:focus{border-color:rgba(var(--accent-rgb),.4)}
 
 /* ─── Settings: Background upload ─── */
+/* ─── Settings: Color themes ─── */
+#theme-options{display:flex;flex-wrap:wrap;gap:6px}
+.theme-swatch{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all .15s;padding:0}
+.theme-swatch:hover{transform:scale(1.15)}
+.theme-swatch.active{border-color:#fff;box-shadow:0 0 8px rgba(255,255,255,.3)}
+
 .bg-upload-btn{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:#b0b4c8;font-size:0.82rem;cursor:pointer;transition:all .15s;border:none;background:rgba(255,255,255,.04);width:100%;box-sizing:border-box;font-family:"Inter",sans-serif}
 .bg-upload-btn:hover{background:rgba(255,255,255,.06);color:#e0e4f0}
 .bg-reset-btn{display:none;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:#ff6b6b;font-size:0.82rem;cursor:pointer;transition:all .15s;border:none;background:rgba(255,80,80,.08);width:100%;box-sizing:border-box;font-family:"Inter",sans-serif;margin-top:6px}
@@ -155,7 +162,7 @@ body.mode-proxy #term{justify-content:flex-start;align-items:stretch;padding:16p
 body.mode-proxy #term-output{max-width:none;overflow-y:auto}
 body.mode-proxy #term-input-row{max-width:none;background:transparent;border:none;border-radius:0;padding:0;margin-top:6px}
 body.mode-proxy #term-input-row:focus-within{box-shadow:none;border-color:transparent}
-body.mode-proxy #term-prefix{display:inline;color:#8b7aff;font-family:"Ubuntu Mono",monospace}
+body.mode-proxy #term-prefix{display:inline;color:var(--accent);font-family:"Ubuntu Mono",monospace}
 body.mode-proxy #term-cursor{display:block}
 body.mode-proxy #term-input{font-family:"Ubuntu Mono",monospace;font-size:14px;caret-color:transparent}
 body.mode-proxy #term-status{display:flex}
