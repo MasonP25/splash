@@ -1274,15 +1274,7 @@ var A,
       function E(A) {
         A.Proxy("window.open", {
           apply(I) {
-            if (I.args[0]) {
-              try {
-                var _u = new URL(I.args[0], location.href);
-                if (_u.hostname === "accounts.google.com" || _u.hostname === "appleid.apple.com") {
-                  return I.return(window.open.call(window, I.args[0], I.args[1], I.args[2]));
-                }
-              } catch(e) {}
-              I.args[0] = (0, C.Oy)(I.args[0], A.meta);
-            }
+            I.args[0] && (I.args[0] = (0, C.Oy)(I.args[0], A.meta)),
               ("_top" === I.args[1] || "_unfencedTop" === I.args[1]) &&
                 (I.args[1] = A.meta.topFrameName),
               "_parent" === I.args[1] && (I.args[1] = A.meta.parentFrameName);
