@@ -87,113 +87,6 @@ const termPrefix = document.getElementById("term-prefix");
 const termCursor = document.getElementById("term-cursor");
 const termCursorMeasure = document.getElementById("term-cursor-measure");
 const proxyWatermark = document.getElementById("proxy-watermark");
-const tabList = document.getElementById("tab-list");
-const tabAddBtn = document.getElementById("tab-add");
-const navBack = document.getElementById("nav-back");
-const navRefresh = document.getElementById("nav-refresh");
-const navUrl = document.getElementById("nav-url");
-
-// ─── Tab system ───
-const tabs = [];
-let activeTabId = null;
-let tabIdCounter = 0;
-
-function createTab(url) {
-  const id = ++tabIdCounter;
-  const tab = { id, url: url || "", title: "New Tab" };
-  tabs.push(tab);
-  activeTabId = id;
-  renderTabs();
-  return tab;
-}
-
-let switchingTab = false;
-function switchTab(id) {
-  const tab = tabs.find(t => t.id === id);
-  if (!tab) return;
-  if (id === activeTabId) return;
-  switchingTab = true;
-  // Save current tab state
-  const prev = tabs.find(t => t.id === activeTabId);
-  if (prev) {
-    prev.url = getDecodedLocation() || currentTarget || prev.url;
-  }
-  activeTabId = id;
-  overlayOpen = false;
-  document.body.classList.remove("overlay-open");
-  renderTabs();
-  if (tab.url) {
-    updateMode("mode-proxy");
-    currentTarget = tab.url;
-    setHashFromUrl(tab.url);
-    openInFrame(tab.url);
-    updateNavUrl(tab.url);
-  } else {
-    currentTarget = "";
-    lastHashValue = "";
-    if (window.location.hash) history.replaceState(null, "", "/");
-    frame.src = "about:blank";
-    updateNavUrl("");
-    updateMode("mode-terminal");
-    termOutput.innerHTML = "";
-    focusInput();
-  }
-  setTimeout(() => { switchingTab = false; }, 100);
-}
-
-function closeTab(id) {
-  const idx = tabs.findIndex(t => t.id === id);
-  if (idx === -1) return;
-  tabs.splice(idx, 1);
-  if (tabs.length === 0) {
-    goHome();
-    return;
-  }
-  if (activeTabId === id) {
-    const newIdx = Math.min(idx, tabs.length - 1);
-    switchTab(tabs[newIdx].id);
-  } else {
-    renderTabs();
-  }
-}
-
-function renderTabs() {
-  tabList.innerHTML = "";
-  const hasTabs = tabs.length > 0;
-  document.getElementById("tab-bar").classList.toggle("has-tabs", hasTabs);
-  document.body.classList.toggle("has-tabs", hasTabs);
-  tabs.forEach(tab => {
-    const el = document.createElement("button");
-    el.className = "tab" + (tab.id === activeTabId ? " active" : "");
-    const title = document.createElement("span");
-    title.className = "tab-title";
-    title.textContent = tab.title;
-    const close = document.createElement("span");
-    close.className = "tab-close";
-    close.textContent = "\u00d7";
-    close.addEventListener("click", (e) => { e.stopPropagation(); closeTab(tab.id); });
-    el.appendChild(title);
-    el.appendChild(close);
-    el.addEventListener("click", () => switchTab(tab.id));
-    tabList.appendChild(el);
-  });
-}
-
-function updateActiveTabInfo() {
-  const tab = tabs.find(t => t.id === activeTabId);
-  if (!tab) return;
-  const url = getDecodedLocation() || currentTarget || tab.url;
-  tab.url = url;
-  try {
-    tab.title = new URL(url).hostname.replace(/^www\./, "") || "New Tab";
-  } catch { tab.title = url ? "Loading..." : "New Tab"; }
-  renderTabs();
-  updateNavUrl(url);
-}
-
-function updateNavUrl(url) {
-  if (navUrl) navUrl.textContent = url || "";
-}
 
 const debugLogBuffer = [];
 const DEBUG_MAX_LOGS = 80;
@@ -600,13 +493,8 @@ function openTarget(raw, inNewTab) {
     openInNewTab(url);
     return;
   }
-  if (tabs.length === 0) createTab(url);
-  else { const t = tabs.find(t => t.id === activeTabId); if (t) t.url = url; }
-  updateMode("mode-proxy");
   setHashFromUrl(url);
   openInFrame(url);
-  updateNavUrl(url);
-  renderTabs();
 }
 
 async function setWispUrl(next) {
@@ -1299,13 +1187,9 @@ function goHome() {
   if (window.location.pathname !== "/" || window.location.hash) {
     history.replaceState(null, "", "/");
   }
-  tabs.length = 0;
-  activeTabId = null;
-  renderTabs();
   updateMode("mode-terminal");
   frame.src = "about:blank";
   setOverlayInput("");
-  termOutput.innerHTML = "";
   updatePrompt();
   focusInput();
 }
@@ -2128,43 +2012,7 @@ async function init() {
     if (overlayOpen) {
       startLocationPolling();
     }
-    updateActiveTabInfo();
   });
-
-  // Tab & nav bar controls
-  tabAddBtn.addEventListener("click", () => {
-    // Save current tab state before switching
-    const prev = tabs.find(t => t.id === activeTabId);
-    if (prev) prev.url = getDecodedLocation() || currentTarget || prev.url;
-    const tab = createTab("");
-    activeTabId = tab.id;
-    currentTarget = "";
-    lastHashValue = "";
-    if (window.location.hash) history.replaceState(null, "", "/");
-    frame.src = "about:blank";
-    updateNavUrl("");
-    overlayOpen = false;
-    document.body.classList.remove("overlay-open");
-    updateMode("mode-terminal");
-    termOutput.innerHTML = "";
-    renderTabs();
-    focusInput();
-  });
-  navBack.addEventListener("click", () => {
-    try {
-      const win = frame.contentWindow;
-      if (win) win.history.back();
-    } catch(e) {}
-  });
-  navRefresh.addEventListener("click", () => {
-    try {
-      const win = frame.contentWindow;
-      if (win) win.location.reload();
-    } catch(e) {
-      if (currentTarget) openInFrame(currentTarget);
-    }
-  });
-
   const token = window.location.hash.replace(/^#/, "");
   if (token) {
     const injected = splashAllowInject ? getInjectedTarget(token) : null;
@@ -2197,22 +2045,9 @@ async function init() {
 }
 
 window.addEventListener("hashchange", () => {
-  if (switchingTab) return;
   const token = window.location.hash.replace(/^#/, "");
   if (!token) {
-    if (tabs.length > 0) {
-      // Stay on tab bar, just show current tab as blank
-      const tab = tabs.find(t => t.id === activeTabId);
-      if (tab) tab.url = "";
-      currentTarget = "";
-      frame.src = "about:blank";
-      updateMode("mode-terminal");
-      termOutput.innerHTML = "";
-      renderTabs();
-      focusInput();
-    } else {
-      goHome();
-    }
+    goHome();
     return;
   }
   const injected = splashAllowInject ? getInjectedTarget(token) : null;
