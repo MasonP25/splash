@@ -1959,8 +1959,6 @@ function setBlackout(hidden) {
   }
 }
 document.addEventListener("visibilitychange", () => setBlackout(document.hidden));
-window.addEventListener("blur", () => setBlackout(true));
-window.addEventListener("focus", () => setBlackout(false));
 
 navigator.serviceWorker.addEventListener("controllerchange", () => {
   sendAdblockSetting();
