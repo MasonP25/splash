@@ -2095,14 +2095,11 @@ updateCursor();
 // ─── Rotating taglines ───
 (function initTaglines() {
   const taglines = [
+    "Browse the internet.",
+    "Search anything.",
+    "Where do you want to go?",
+    "Go on any website.",
     "Browse freely.",
-    "Your internet, unfiltered.",
-    "Access everything.",
-    "No limits, no logs.",
-    "The web, unlocked.",
-    "Surf without borders.",
-    "Stay under the radar.",
-    "Go anywhere.",
   ];
   const el = document.getElementById("splash-tagline");
   if (!el) return;
