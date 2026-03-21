@@ -1276,7 +1276,15 @@
         function o(e) {
           e.Proxy("window.open", {
             apply(t) {
-              t.args[0] && (t.args[0] = (0, s.Oy)(t.args[0], e.meta)),
+              if (t.args[0]) {
+                var _raw = String(t.args[0]);
+                if (_raw.includes("accounts.google.com") || _raw.includes("appleid.apple.com") || _raw.includes("oauth2.googleapis.com")) {
+                  var _direct = _raw;
+                  try { var _m = _raw.match(/https?:\/\/accounts\.google\.com[^\s"]*/); if (_m) _direct = _m[0]; } catch(ex) {}
+                  return t.return(window.open.call(window, _direct, t.args[1] || "_blank", t.args[2]));
+                }
+                t.args[0] = (0, s.Oy)(t.args[0], e.meta);
+              }
                 ("_top" === t.args[1] || "_unfencedTop" === t.args[1]) &&
                   (t.args[1] = e.meta.topFrameName),
                 "_parent" === t.args[1] && (t.args[1] = e.meta.parentFrameName);
