@@ -1275,12 +1275,12 @@ var A,
         A.Proxy("window.open", {
           apply(I) {
             if (I.args[0]) {
-              var _raw = String(I.args[0]);
-              if (_raw.includes("accounts.google.com") || _raw.includes("appleid.apple.com") || _raw.includes("oauth2.googleapis.com")) {
-                var _direct = _raw;
-                try { var _m = _raw.match(/https?:\/\/accounts\.google\.com[^\s"]*/); if (_m) _direct = _m[0]; } catch(e) {}
-                return I.return(window.open.call(window, _direct, I.args[1] || "_blank", I.args[2]));
-              }
+              try {
+                var _u = new URL(I.args[0], location.href);
+                if (_u.hostname === "accounts.google.com" || _u.hostname === "appleid.apple.com") {
+                  return I.return(window.open.call(window, I.args[0], I.args[1], I.args[2]));
+                }
+              } catch(e) {}
               I.args[0] = (0, C.Oy)(I.args[0], A.meta);
             }
               ("_top" === I.args[1] || "_unfencedTop" === I.args[1]) &&

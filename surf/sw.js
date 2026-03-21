@@ -174,7 +174,7 @@ async function handleRequest(event) {
 self.addEventListener("fetch", (event) => {
   const url = event.request.url;
 
-  if (url.includes("supabase.co") || url.includes("accounts.google.com") || url.includes("apis.google.com/js/") || url.includes("oauth2.googleapis.com") || url.includes("www.googleapis.com/oauth")) {
+  if (url.includes("supabase.co")) {
     return;
   }
 
