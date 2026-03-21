@@ -3,7 +3,7 @@
 html,body{height:100%;margin:0;background:#0a0a0f;font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;color:#e0e4f0}
 body{background:radial-gradient(ellipse at top,#12121f 0%,#0a0a0f 60%,#050508 100%)}
 
-#app{position:fixed;inset:0;overflow:hidden}
+#app{position:fixed;inset:0;overflow:auto}
 
 /* ─── Proxy Shell ─── */
 #proxy-shell{position:fixed;inset:0;background:#050607;display:none}
@@ -55,9 +55,23 @@ body{background:radial-gradient(ellipse at top,#12121f 0%,#0a0a0f 60%,#050508 10
 .qlink:hover{background:rgba(139,122,255,.1);border-color:rgba(139,122,255,.3);color:#e0e4f0;transform:translateY(-1px)}
 .qlink-icon{font-size:0.85rem;width:18px;text-align:center;color:#8b7aff}
 
-/* ─── Hint ─── */
-#splash-hint{margin-top:24px;font-size:0.75rem;color:#3a3a4a;letter-spacing:.03em}
-#splash-hint strong{color:#5a5a6a;font-weight:600}
+/* ─── Settings Button & Panel ─── */
+#settings-btn{position:fixed;top:16px;right:16px;z-index:999;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#8b8ba0;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+#settings-btn:hover{background:rgba(139,122,255,.1);border-color:rgba(139,122,255,.4);color:#e0e4f0;transform:scale(1.1)}
+#settings-panel{display:none;position:fixed;top:66px;right:16px;z-index:1000;width:220px;max-height:420px;overflow-y:auto;background:rgba(14,14,22,.97);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;box-shadow:0 10px 40px rgba(0,0,0,.5);backdrop-filter:blur(12px);scrollbar-width:none}
+#settings-panel::-webkit-scrollbar{width:0}
+.settings-header{font-size:0.95rem;font-weight:600;color:#e0e4f0;margin-bottom:12px}
+.settings-section-label{font-size:0.7rem;color:#6b6b80;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;margin-top:4px}
+.settings-divider{border-top:1px solid rgba(255,255,255,.06);margin:10px 0}
+.cloak-option{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:#b0b4c8;font-size:0.82rem;cursor:pointer;transition:all .15s;border:2px solid transparent}
+.cloak-option:hover{background:rgba(255,255,255,.05)}
+.cloak-option.active{border-color:#8b7aff;color:#e0e4f0}
+.cloak-option-icon{font-size:1rem;width:20px;text-align:center}
+.settings-action{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:#b0b4c8;font-size:0.82rem;cursor:pointer;transition:all .15s}
+.settings-action:hover{background:rgba(255,255,255,.05);color:#e0e4f0}
+.settings-action-icon{font-size:1rem;width:20px;text-align:center}
+body.mode-proxy #settings-btn{display:none}
+body.mode-proxy #settings-panel{display:none}
 
 /* ─── Terminal Output Lines ─── */
 .term-line{margin:3px 0;white-space:pre-wrap;word-break:break-word;font-family:"Ubuntu Mono",monospace}
@@ -89,7 +103,6 @@ body.mode-terminal .term-pre{display:none}
 body.mode-proxy #proxy-shell{display:block}
 body.mode-proxy #splash-landing{display:none}
 body.mode-proxy #quick-links{display:none}
-body.mode-proxy #splash-hint{display:none}
 
 body.mode-proxy #terminal-shell{
   height:32vh;width:min(760px,84vw);left:50%;top:auto;right:auto;bottom:16px;

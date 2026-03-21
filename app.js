@@ -200,17 +200,17 @@ window.addEventListener("unhandledrejection", (event) => {
 });
 
 const CLOAKS = {
-  default: { name: "Default", title: "SPLASH", favicon: "" },
-  gdocs: { name: "Google Docs", title: "Untitled document - Google Docs", favicon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
-  gslides: { name: "Google Slides", title: "Untitled presentation - Google Slides", favicon: "https://ssl.gstatic.com/docs/presentations/images/favicon5.ico" },
-  gsheets: { name: "Google Sheets", title: "Untitled spreadsheet - Google Sheets", favicon: "https://ssl.gstatic.com/docs/spreadsheets/images/favicon3.ico" },
-  classroom: { name: "Google Classroom", title: "Home", favicon: "https://ssl.gstatic.com/classroom/favicon.png" },
-  canvas: { name: "Canvas", title: "Dashboard", favicon: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" },
-  clever: { name: "Clever", title: "Clever | Portal", favicon: "https://assets.clever.com/resource/icons/favicon.ico" },
-  ixl: { name: "IXL", title: "IXL | Dashboard", favicon: "https://www.ixl.com/favicon.ico" },
-  deltamath: { name: "DeltaMath", title: "DeltaMath", favicon: "https://www.deltamath.com/favicon.ico" },
-  khan: { name: "Khan Academy", title: "Khan Academy | Free Online Courses", favicon: "https://cdn.kastatic.org/images/favicon.ico" },
-  wikipedia: { name: "Wikipedia", title: "Wikipedia, the free encyclopedia", favicon: "https://en.wikipedia.org/static/favicon/wikipedia.ico" },
+  default: { name: "Default", icon: "\uD83C\uDF0A", title: "SPLASH", favicon: "" },
+  gdocs: { name: "Google Docs", icon: "\uD83D\uDCC4", title: "Untitled document - Google Docs", favicon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
+  gslides: { name: "Google Slides", icon: "\uD83D\uDCCA", title: "Untitled presentation - Google Slides", favicon: "https://ssl.gstatic.com/docs/presentations/images/favicon5.ico" },
+  gsheets: { name: "Google Sheets", icon: "\uD83D\uDCD7", title: "Untitled spreadsheet - Google Sheets", favicon: "https://ssl.gstatic.com/docs/spreadsheets/images/favicon3.ico" },
+  classroom: { name: "Google Classroom", icon: "\uD83C\uDF93", title: "Home", favicon: "https://ssl.gstatic.com/classroom/favicon.png" },
+  canvas: { name: "Canvas", icon: "\uD83D\uDFE7", title: "Dashboard", favicon: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" },
+  clever: { name: "Clever", icon: "\uD83D\uDD37", title: "Clever | Portal", favicon: "https://assets.clever.com/resource/icons/favicon.ico" },
+  ixl: { name: "IXL", icon: "\uD83D\uDCD0", title: "IXL | Dashboard", favicon: "https://www.ixl.com/favicon.ico" },
+  deltamath: { name: "DeltaMath", icon: "\uD83D\uDCC8", title: "DeltaMath", favicon: "https://www.deltamath.com/favicon.ico" },
+  khan: { name: "Khan Academy", icon: "\uD83D\uDFE2", title: "Khan Academy | Free Online Courses", favicon: "https://cdn.kastatic.org/images/favicon.ico" },
+  wikipedia: { name: "Wikipedia", icon: "\uD83D\uDCD6", title: "Wikipedia, the free encyclopedia", favicon: "https://en.wikipedia.org/static/favicon/wikipedia.ico" },
 };
 
 function applySplashCloak(id) {
@@ -2102,5 +2102,73 @@ if (proxyWatermark) {
     toggleOverlay();
   });
 }
+
+// Settings panel
+(function initSettingsPanel() {
+  const settingsBtn = document.getElementById("settings-btn");
+  const settingsPanel = document.getElementById("settings-panel");
+  const cloakOptions = document.getElementById("cloak-options");
+  const settingsActions = document.getElementById("settings-actions");
+  if (!settingsBtn || !settingsPanel || !cloakOptions) return;
+
+  function renderCloakOptions() {
+    const current = getSetting("splash:cloak", "") || "default";
+    cloakOptions.innerHTML = "";
+    Object.keys(CLOAKS).forEach((id) => {
+      const c = CLOAKS[id];
+      const opt = document.createElement("div");
+      opt.className = "cloak-option" + ((id === current || (!current && id === "default")) ? " active" : "");
+      opt.innerHTML = `<span class="cloak-option-icon">${c.icon}</span>${escapeHtml(c.name)}`;
+      opt.addEventListener("click", () => {
+        applySplashCloak(id);
+        renderCloakOptions();
+      });
+      cloakOptions.appendChild(opt);
+    });
+  }
+
+  renderCloakOptions();
+
+  // about:blank opener
+  if (settingsActions) {
+    const abBtn = document.createElement("div");
+    abBtn.className = "settings-action";
+    abBtn.innerHTML = '<span class="settings-action-icon">\uD83D\uDCC3</span>about:blank';
+    abBtn.addEventListener("click", () => {
+      const w = window.open("about:blank", "_blank");
+      if (w) {
+        const iframe = w.document.createElement("iframe");
+        iframe.style.cssText = "position:fixed;inset:0;width:100%;height:100%;border:none";
+        iframe.src = window.location.href;
+        w.document.body.style.margin = "0";
+        w.document.body.appendChild(iframe);
+      }
+    });
+    settingsActions.appendChild(abBtn);
+
+    const blobBtn = document.createElement("div");
+    blobBtn.className = "settings-action";
+    blobBtn.innerHTML = '<span class="settings-action-icon">\uD83C\uDF10</span>Blob URL';
+    blobBtn.addEventListener("click", () => {
+      const html = `<!DOCTYPE html><html><head><title>SPLASH</title></head><body style="margin:0"><iframe style="position:fixed;inset:0;width:100%;height:100%;border:none" src="${escapeHtml(window.location.href)}"></iframe></body></html>`;
+      const blob = new Blob([html], { type: "text/html" });
+      window.open(URL.createObjectURL(blob), "_blank");
+    });
+    settingsActions.appendChild(blobBtn);
+  }
+
+  // Toggle panel
+  settingsBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = settingsPanel.style.display === "block";
+    settingsPanel.style.display = open ? "none" : "block";
+    if (!open) renderCloakOptions();
+  });
+  document.addEventListener("click", (e) => {
+    if (!settingsPanel.contains(e.target) && e.target !== settingsBtn) {
+      settingsPanel.style.display = "none";
+    }
+  });
+})();
 
 init();

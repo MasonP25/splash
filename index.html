@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles.css?v=3" />
+    <link rel="stylesheet" href="/styles.css?v=4" />
     <script src="/index.config.js"></script>
     <script src="/surf/baremux/index.js"></script>
     <script src="/surf/scram/scramjet.all.js"></script>
-    <script src="/app.js?v=4" defer></script>
+    <script src="/app.js?v=5" defer></script>
     <title>SPLASH</title>
     <meta name="title" content="SPLASH" />
     <meta name="description" content="a modern web proxy" />
@@ -46,6 +46,17 @@
           <div class="watermark-hint">ctrl + ` or click to open</div>
         </div>
       </div>
+      <button id="settings-btn" title="Settings">&#9881;</button>
+      <div id="settings-panel">
+        <div class="settings-header">
+          <span>Settings</span>
+        </div>
+        <div class="settings-section-label">Tab Cloak</div>
+        <div id="cloak-options"></div>
+        <div class="settings-divider"></div>
+        <div class="settings-section-label">Open in</div>
+        <div id="settings-actions"></div>
+      </div>
       <div id="terminal-shell">
         <div id="term">
           <div id="splash-landing">
@@ -70,9 +81,9 @@
             <a class="qlink" data-url="https://discord.com"><span class="qlink-icon">&#9775;</span>Discord</a>
             <a class="qlink" data-url="https://reddit.com"><span class="qlink-icon">R</span>Reddit</a>
             <a class="qlink" data-url="https://tiktok.com"><span class="qlink-icon">&#9834;</span>TikTok</a>
+            <a class="qlink" data-url="https://masonp25.github.io/game-site/"><span class="qlink-icon">&#127918;</span>Arcade</a>
             <a class="qlink" data-url="https://twitch.tv"><span class="qlink-icon">&#9656;</span>Twitch</a>
           </div>
-          <div id="splash-hint">Type <strong>help</strong> for commands &middot; <strong>games</strong> for game list</div>
         </div>
       </div>
     </div>
