@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles.css?v=6" />
+    <link rel="stylesheet" href="/styles.css?v=7" />
     <script src="/index.config.js"></script>
     <script src="/surf/baremux/index.js"></script>
     <script src="/surf/scram/scramjet.all.js"></script>
-    <script src="/app.js?v=6" defer></script>
+    <script src="/app.js?v=7" defer></script>
     <title>SPLASH</title>
     <meta name="title" content="SPLASH" />
     <meta name="description" content="a modern web proxy" />
@@ -54,6 +54,9 @@
         <div class="settings-section-label">Tab Cloak</div>
         <div id="cloak-options"></div>
         <div class="settings-divider"></div>
+        <div class="settings-section-label">Panic URL (ctrl+p)</div>
+        <div id="panic-url-setting"></div>
+        <div class="settings-divider"></div>
         <div class="settings-section-label">Open in</div>
         <div id="settings-actions"></div>
       </div>
@@ -86,6 +89,11 @@
             <a class="qlink" data-url="https://tiktok.com"><span class="qlink-icon">&#9834;</span>TikTok</a>
             <a class="qlink" data-url="https://masonp25.github.io/game-site/"><span class="qlink-icon">&#127918;</span>Arcade</a>
             <a class="qlink" data-url="https://twitch.tv"><span class="qlink-icon">&#9656;</span>Twitch</a>
+          </div>
+          <div id="panic-hint">ctrl + p to panic</div>
+          <div id="widgets">
+            <div id="widget-time"></div>
+            <div id="widget-weather"></div>
           </div>
         </div>
       </div>

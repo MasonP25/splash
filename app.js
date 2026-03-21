@@ -257,6 +257,7 @@ window.addEventListener("message", (e) => {
 });
 
 let panicKey = getSetting("splash:panicKey", "") || "";
+let panicUrl = getSetting("splash:panicUrl", "") || "https://google.com";
 let wispUrl = getSetting("splash:wispUrl", "wss://wisp.rhw.one/") || "wss://wisp.rhw.one/";
 let adblockEnabled = getSetting("splash:adblockEnabled", null);
 adblockEnabled = adblockEnabled === null ? true : adblockEnabled === "true";
@@ -1003,6 +1004,11 @@ function handleGlobalKeydown(event) {
     event.stopImmediatePropagation();
     goHome();
     appendOutput("Returned home");
+    return;
+  }
+  if (event.ctrlKey && event.key.toLowerCase() === "p") {
+    event.preventDefault();
+    window.location.replace(panicUrl || "https://google.com");
     return;
   }
   if (event.ctrlKey && panicKey && event.key.toLowerCase() === panicKey) {
@@ -2086,6 +2092,64 @@ updatePrompt();
 focusInput();
 updateCursor();
 
+// ─── Rotating taglines ───
+(function initTaglines() {
+  const taglines = [
+    "Browse freely.",
+    "Your internet, unfiltered.",
+    "Access everything.",
+    "No limits, no logs.",
+    "The web, unlocked.",
+    "Surf without borders.",
+    "Stay under the radar.",
+    "Go anywhere.",
+  ];
+  const el = document.getElementById("splash-tagline");
+  if (!el) return;
+  let idx = 0;
+  setInterval(() => {
+    el.style.opacity = "0";
+    setTimeout(() => {
+      idx = (idx + 1) % taglines.length;
+      el.textContent = taglines[idx];
+      el.style.opacity = "1";
+    }, 400);
+  }, 4000);
+})();
+
+// ─── Time & Weather widgets ───
+(function initWidgets() {
+  const timeEl = document.getElementById("widget-time");
+  const weatherEl = document.getElementById("widget-weather");
+
+  // Time widget - updates every second
+  function updateTime() {
+    if (!timeEl) return;
+    const now = new Date();
+    const h = now.getHours();
+    const m = String(now.getMinutes()).padStart(2, "0");
+    const ampm = h >= 12 ? "PM" : "AM";
+    const h12 = h % 12 || 12;
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    timeEl.textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()} \u2022 ${h12}:${m} ${ampm}`;
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+
+  // Weather widget - uses free wttr.in API (no key needed)
+  if (!weatherEl) return;
+  fetch("https://wttr.in/?format=%t+%C&m")
+    .then((r) => r.ok ? r.text() : Promise.reject())
+    .then((text) => {
+      const cleaned = text.trim();
+      if (cleaned && !cleaned.includes("Unknown")) {
+        weatherEl.textContent = cleaned;
+      }
+    })
+    .catch(() => {});
+})();
+
 // Quick link click handlers
 document.querySelectorAll("#quick-links .qlink").forEach((link) => {
   link.addEventListener("click", (e) => {
@@ -2103,12 +2167,13 @@ if (proxyWatermark) {
   });
 }
 
-// Settings panel
+// ─── Settings panel ───
 (function initSettingsPanel() {
   const settingsBtn = document.getElementById("settings-btn");
   const settingsPanel = document.getElementById("settings-panel");
   const cloakOptions = document.getElementById("cloak-options");
   const settingsActions = document.getElementById("settings-actions");
+  const panicUrlSetting = document.getElementById("panic-url-setting");
   if (!settingsBtn || !settingsPanel || !cloakOptions) return;
 
   function renderCloakOptions() {
@@ -2128,6 +2193,25 @@ if (proxyWatermark) {
   }
 
   renderCloakOptions();
+
+  // Panic URL setting
+  if (panicUrlSetting) {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "panic-url-input";
+    input.placeholder = "https://google.com";
+    input.value = panicUrl || "https://google.com";
+    input.addEventListener("change", () => {
+      let val = input.value.trim();
+      if (val && !val.startsWith("http://") && !val.startsWith("https://")) {
+        val = "https://" + val;
+        input.value = val;
+      }
+      panicUrl = val || "https://google.com";
+      setSetting("splash:panicUrl", panicUrl);
+    });
+    panicUrlSetting.appendChild(input);
+  }
 
   // about:blank opener
   if (settingsActions) {

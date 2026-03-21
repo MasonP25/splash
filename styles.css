@@ -27,7 +27,7 @@ body{background:radial-gradient(ellipse at top,#12121f 0%,#0a0a0f 60%,#050508 10
 /* ─── Landing (terminal mode) ─── */
 #splash-landing{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:28px}
 #splash-logo{font-size:3.2rem;font-weight:700;letter-spacing:10px;background:linear-gradient(135deg,#8b7aff 0%,#6ee7b7 50%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;user-select:none}
-#splash-tagline{font-size:0.9rem;color:#6b6b80;letter-spacing:.1em}
+#splash-tagline{font-size:0.9rem;color:#6b6b80;letter-spacing:.1em;transition:opacity .4s ease;min-height:1.4em}
 
 #term-output{width:100%;max-width:560px;overflow:visible;font-size:14px;line-height:1.6;scrollbar-width:none;font-family:"Ubuntu Mono",monospace}
 #term-output::-webkit-scrollbar{width:0;height:0}
@@ -104,6 +104,20 @@ body.mode-terminal .term-pre{display:none}
 
 /* ─── Proxy Mode ─── */
 body.mode-proxy #proxy-shell{display:block}
+/* ─── Panic Hint ─── */
+#panic-hint{margin-top:14px;font-size:0.68rem;color:#2e2e3e;letter-spacing:.04em}
+body.mode-proxy #panic-hint{display:none}
+
+/* ─── Widgets ─── */
+#widgets{display:flex;gap:20px;align-items:center;justify-content:center;margin-top:18px;font-size:0.82rem;color:#6b6b80}
+#widget-time{display:flex;align-items:center;gap:6px}
+#widget-weather{display:flex;align-items:center;gap:6px}
+body.mode-proxy #widgets{display:none}
+
+/* ─── Settings: Panic URL input ─── */
+.panic-url-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:7px 10px;color:#e0e4f0;font-size:0.82rem;font-family:"Inter",sans-serif;outline:none;box-sizing:border-box;transition:border-color .2s}
+.panic-url-input:focus{border-color:rgba(139,122,255,.4)}
+
 body.mode-proxy #splash-landing{display:none}
 body.mode-proxy #quick-links{display:none}
 
