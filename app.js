@@ -2082,22 +2082,21 @@ if (watermarkLogo) {
   watermarkLogo.textContent =
     "            __         __ \n  ___ ___  / /__ ____ / / \n (_-</ _ \\ / / _ `(_-</ _ \\\n/___/ .__/_/\\_,_/___/_//_/\n   /_/                    ";
 }
-appendOutput(
-  '<pre class="term-pre">      ___           ___           ___       ___           ___           ___     \n     /\\  \\         /\\  \\         /\\__\\     /\\  \\         /\\  \\         /\\__\\    \n    /::\\  \\       /::\\  \\       /:/  /    /::\\  \\       /::\\  \\       /:/  /    \n   /:/\\ \\  \\     /:/\\:\\  \\     /:/  /    /:/\\:\\  \\     /:/\\ \\  \\     /:/__/     \n  _\\:\\~\\ \\  \\   /::\\~\\:\\  \\   /:/  /    /::\\~\\:\\  \\   _\\:\\~\\ \\  \\   /::\\  \\ ___ \n /\\ \\:\\ \\ \\__\\ /:/\\:\\ \\:\\__\\ /:/__/    /:/\\:\\ \\:\\__\\ /\\ \\:\\ \\ \\__\\ /:/\\:\\  /\\__\\\n \\:\\ \\:\\ \\/__/ \\/__\\:\\/:/  / \\:\\  \\    \\/__\\:\\/:/  / \\:\\ \\:\\ \\/__/ \\/__\\:\\/:/  /\n  \\:\\ \\:\\__\\        \\::/  /   \\:\\  \\        \\::/  /   \\:\\ \\:\\__\\        \\::/  / \n   \\:\\/\\:/  /         \\/__/     \\:\\  \\       /:/  /     \\:\\/\\:/  /        /:/  /  \n    \\::/  /                     \\:\\__\\     /:/  /       \\::/  /        /:/  /   \n     \\/__/                       \\/__/     \\/__/         \\/__/         \\/__/    </pre>',
-);
-appendOutput("Welcome to SPLASH", "#a0ffcf");
-appendOutput(
-  'join our discord: <a href="https://discord.gg/n5AfXS5eTP" target="_blank" rel="noopener">discord.gg/n5AfXS5eTP</a>',
-  "#a0ffcf",
-);
-appendOutput(
-  'created and maintained by <a href="https://rhw.one" target="_blank" rel="noopener">rhw</a>, <a href="https://github.com/rhenryw/SPLASH" target="_blank" rel="noopener">github</a>',
-  "#a0ffcf",
-);
-appendOutput("enter url to open page, or type help for list of commands", "#d9ffe8");
 updatePrompt();
 focusInput();
 updateCursor();
+
+// Quick link click handlers
+document.querySelectorAll("#quick-links .qlink").forEach((link) => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    const url = link.dataset.url;
+    if (url) {
+      const inNewTab = !document.body.classList.contains("mode-proxy") && homeNewTab;
+      openTarget(url, inNewTab);
+    }
+  });
+});
 if (proxyWatermark) {
   proxyWatermark.addEventListener("click", () => {
     toggleOverlay();

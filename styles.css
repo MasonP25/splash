@@ -1,1 +1,121 @@
-@import"https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap";html,body{height:100%;margin:0;background:#0b0f0f;font-family:"Ubuntu Mono",ui-monospace,Menlo,Monaco,Consolas,"Liberation Mono",monospace;color:#e6f6ee}body{background:radial-gradient(circle at top, #0f1416 0%, #090c0d 55%, #050607 100%)}#app{position:fixed;inset:0;overflow:hidden}#proxy-shell{position:fixed;inset:0;background:#050607;display:none}#proxy-frame{position:absolute;inset:0;border:0;width:100%;height:100%;background:#050607}#proxy-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,10,11,.35);color:#e8fff4;opacity:0;pointer-events:none;transition:opacity .2s ease}#proxy-loading.show{opacity:1}#proxy-loading-art{font-family:inherit;font-size:14px;line-height:1.3;white-space:pre;color:#9affc6;animation:loadingFloat 1.6s ease-in-out infinite}@keyframes loadingFloat{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}#proxy-watermark{position:absolute;right:10px;bottom:8px;display:flex;flex-direction:column;align-items:flex-end;gap:3px;opacity:0;pointer-events:auto;color:#b8ffe0;cursor:pointer;transform:scale(0.55);transform-origin:bottom right}.watermark-logo{margin:0;font-family:inherit;font-size:10px;line-height:1.1;white-space:pre}.watermark-hint{font-size:10px;letter-spacing:.06em;text-transform:lowercase}#terminal-shell{position:fixed;inset:0;background:#0b0f0f;transition:transform .2s ease;box-shadow:inset 0 0 120px rgba(0,0,0,.7)}#term{display:flex;flex-direction:column;height:100%;padding:28px 30px 22px;box-sizing:border-box;background:rgba(0,0,0,0)}#term-output{flex:1;overflow-y:auto;font-size:15px;line-height:1.55;padding-right:8px;margin-top:0;scrollbar-width:none}#term-output::-webkit-scrollbar{width:0;height:0}#term-status{display:none;gap:8px;font-size:13px;color:#9ed9c2;margin-bottom:8px}.term-status-label{color:#6effb2;text-transform:lowercase}#term-location{color:#c8f7e2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60vw}.term-line{margin:3px 0;white-space:pre-wrap;word-break:break-word}.term-pre{font-family:inherit;color:#f0fff6;margin:8px 0 14px;white-space:pre}#term-input-row{display:flex;align-items:center;padding-top:0;margin-top:6px;position:relative}#term-prefix{color:#6effb2}#term-input{flex:1;background:rgba(0,0,0,0);border:none;outline:none;color:#f4fff9;font-size:15px;font-family:inherit;margin-left:0;caret-color:rgba(0,0,0,0)}#term-cursor{position:absolute;top:50%;width:.62em;height:1.2em;background:#f4fff9;transform:translateY(-50%);pointer-events:none;animation:cursorBlink 1.1s steps(1) infinite}#term-cursor.hidden{opacity:0;animation:none}#term-cursor-measure{position:absolute;visibility:hidden;white-space:pre;font:inherit;padding:0;margin:0}.games-panel{margin:8px 0 12px;font-size:15px;line-height:1.55}.games-section-title{color:#9affc6;margin-top:6px}.games-line{display:flex;align-items:center;gap:10px;padding:2px 6px;border-radius:6px;color:#e6f6ee}.games-line.is-selected{background:rgba(110,255,178,.18);color:#f3fff9}.games-line.is-clickable{cursor:pointer}.games-number{color:#6effb2;width:3ch;text-align:right}.games-empty{color:#8ab8a6;margin-left:12px}.games-hint{color:#8ab8a6;margin-top:8px}.games-match{background:rgba(122,255,208,.25);color:#eafff6;padding:0 2px;border-radius:4px}@keyframes cursorBlink{0%{opacity:1}50%{opacity:1}50.01%{opacity:0}100%{opacity:0}}#term-output a{color:#76ffd3;text-decoration:none}#term-output a:hover{text-decoration:underline}body.mode-proxy #proxy-shell{display:block}body.mode-proxy #terminal-shell{height:32vh;width:min(760px,84vw);left:50%;top:auto;right:auto;bottom:16px;transform:translate(-50%, calc(100% + 30px));pointer-events:none;border:1px solid #2a2f2f;border-radius:10px;background:rgba(22,24,28,.96);box-shadow:0 10px 30px rgba(0,0,0,.45)}body.mode-proxy #term-status{display:flex}body.mode-proxy #term-location{max-width:50vw}body.mode-proxy #term-header{display:none}body.mode-proxy .term-pre{display:none}body.mode-proxy.overlay-open #terminal-shell{transform:translate(-50%, 0);pointer-events:auto}body.mode-proxy.overlay-open #term-status{display:none}body.mode-terminal #terminal-shell{transform:translateY(0);pointer-events:auto}
+@import"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Ubuntu+Mono:wght@400;700&display=swap";
+
+html,body{height:100%;margin:0;background:#0a0a0f;font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;color:#e0e4f0}
+body{background:radial-gradient(ellipse at top,#12121f 0%,#0a0a0f 60%,#050508 100%)}
+
+#app{position:fixed;inset:0;overflow:hidden}
+
+/* ─── Proxy Shell ─── */
+#proxy-shell{position:fixed;inset:0;background:#050607;display:none}
+#proxy-frame{position:absolute;inset:0;border:0;width:100%;height:100%;background:#050607}
+#proxy-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,10,11,.5);opacity:0;pointer-events:none;transition:opacity .2s ease}
+#proxy-loading.show{opacity:1}
+#proxy-loading-art{display:flex;flex-direction:column;align-items:center;gap:16px}
+.loading-spinner{width:36px;height:36px;border:3px solid rgba(140,120,255,.15);border-top-color:#8b7aff;border-radius:50%;animation:spin .8s linear infinite}
+.loading-text{font-size:14px;color:#8b8ba0;letter-spacing:.05em}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#proxy-watermark{position:absolute;right:10px;bottom:8px;display:flex;flex-direction:column;align-items:flex-end;gap:3px;opacity:0;pointer-events:auto;color:#b8ffe0;cursor:pointer;transform:scale(0.55);transform-origin:bottom right}
+.watermark-logo{margin:0;font-family:"Ubuntu Mono",monospace;font-size:10px;line-height:1.1;white-space:pre}
+.watermark-hint{font-size:10px;letter-spacing:.06em;text-transform:lowercase}
+
+/* ─── Terminal Shell ─── */
+#terminal-shell{position:fixed;inset:0;background:transparent;transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:none}
+
+#term{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:28px 24px 22px;box-sizing:border-box;gap:0}
+
+/* ─── Landing (terminal mode) ─── */
+#splash-landing{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:28px}
+#splash-logo{font-size:3.2rem;font-weight:700;letter-spacing:10px;background:linear-gradient(135deg,#8b7aff 0%,#6ee7b7 50%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;user-select:none}
+#splash-tagline{font-size:0.9rem;color:#6b6b80;letter-spacing:.1em}
+
+#term-output{width:100%;max-width:560px;overflow-y:auto;font-size:14px;line-height:1.6;scrollbar-width:none;font-family:"Ubuntu Mono",monospace}
+#term-output::-webkit-scrollbar{width:0;height:0}
+
+#term-status{display:none;gap:8px;font-size:13px;color:#8b8ba0;margin-bottom:8px}
+.term-status-label{color:#8b7aff;text-transform:lowercase}
+#term-location{color:#c0c4d8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60vw}
+
+/* ─── Search Bar ─── */
+#term-input-row{display:flex;align-items:center;width:100%;max-width:560px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px 20px;margin-top:0;position:relative;transition:border-color .2s,box-shadow .2s}
+#term-input-row:focus-within{border-color:rgba(139,122,255,.4);box-shadow:0 0 0 3px rgba(139,122,255,.1),0 8px 32px rgba(0,0,0,.3)}
+
+#term-prefix{color:#8b7aff;font-family:"Ubuntu Mono",monospace}
+#term-input{flex:1;background:transparent;border:none;outline:none;color:#e8eaf0;font-size:15px;font-family:"Inter",sans-serif;margin-left:0;caret-color:#8b7aff}
+#term-input::placeholder{color:#4a4a5a}
+
+#term-cursor{position:absolute;top:50%;width:.62em;height:1.2em;background:#8b7aff;transform:translateY(-50%);pointer-events:none;animation:cursorBlink 1.1s steps(1) infinite}
+#term-cursor.hidden{opacity:0;animation:none}
+#term-cursor-measure{position:absolute;visibility:hidden;white-space:pre;font:"Ubuntu Mono",monospace;padding:0;margin:0}
+@keyframes cursorBlink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+
+/* ─── Quick Links ─── */
+#quick-links{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px;max-width:560px}
+.qlink{display:flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;color:#b0b4c8;font-size:0.8rem;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;user-select:none}
+.qlink:hover{background:rgba(139,122,255,.1);border-color:rgba(139,122,255,.3);color:#e0e4f0;transform:translateY(-1px)}
+.qlink-icon{font-size:0.85rem;width:18px;text-align:center;color:#8b7aff}
+
+/* ─── Hint ─── */
+#splash-hint{margin-top:24px;font-size:0.75rem;color:#3a3a4a;letter-spacing:.03em}
+#splash-hint strong{color:#5a5a6a;font-weight:600}
+
+/* ─── Terminal Output Lines ─── */
+.term-line{margin:3px 0;white-space:pre-wrap;word-break:break-word;font-family:"Ubuntu Mono",monospace}
+.term-pre{font-family:"Ubuntu Mono",monospace;color:#c0c8d8;margin:8px 0 14px;white-space:pre}
+
+/* ─── Games Panel ─── */
+.games-panel{margin:8px 0 12px;font-size:14px;line-height:1.55;font-family:"Ubuntu Mono",monospace}
+.games-section-title{color:#8b7aff;margin-top:6px}
+.games-line{display:flex;align-items:center;gap:10px;padding:4px 8px;border-radius:8px;color:#c0c4d8;transition:background .15s}
+.games-line.is-selected{background:rgba(139,122,255,.15);color:#e8eaf0}
+.games-line.is-clickable{cursor:pointer}
+.games-number{color:#8b7aff;width:3ch;text-align:right}
+.games-empty{color:#5a5a6a;margin-left:12px}
+.games-hint{color:#5a5a6a;margin-top:8px}
+.games-match{background:rgba(139,122,255,.2);color:#e0e4f0;padding:0 2px;border-radius:4px}
+
+/* ─── Links ─── */
+#term-output a{color:#8b7aff;text-decoration:none}
+#term-output a:hover{text-decoration:underline;color:#a89aff}
+
+/* ─── Landing mode: hide terminal chrome ─── */
+body.mode-terminal #term-prefix{display:none}
+body.mode-terminal #term-cursor{display:none}
+body.mode-terminal #term-input{caret-color:#8b7aff}
+body.mode-terminal #terminal-shell{transform:translateY(0);pointer-events:auto;background:transparent}
+body.mode-terminal .term-pre{display:none}
+
+/* ─── Proxy Mode ─── */
+body.mode-proxy #proxy-shell{display:block}
+body.mode-proxy #splash-landing{display:none}
+body.mode-proxy #quick-links{display:none}
+body.mode-proxy #splash-hint{display:none}
+
+body.mode-proxy #terminal-shell{
+  height:32vh;width:min(760px,84vw);left:50%;top:auto;right:auto;bottom:16px;
+  transform:translate(-50%,calc(100% + 30px));pointer-events:none;
+  border:1px solid rgba(255,255,255,.06);border-radius:14px;
+  background:rgba(14,14,22,.96);
+  box-shadow:0 10px 40px rgba(0,0,0,.6);
+  backdrop-filter:blur(12px)
+}
+body.mode-proxy #term{justify-content:flex-start;align-items:stretch;padding:16px 20px 14px}
+body.mode-proxy #term-output{max-width:none}
+body.mode-proxy #term-input-row{max-width:none;background:transparent;border:none;border-radius:0;padding:0;margin-top:6px}
+body.mode-proxy #term-input-row:focus-within{box-shadow:none;border-color:transparent}
+body.mode-proxy #term-prefix{display:inline;color:#8b7aff;font-family:"Ubuntu Mono",monospace}
+body.mode-proxy #term-cursor{display:block}
+body.mode-proxy #term-input{font-family:"Ubuntu Mono",monospace;font-size:14px;caret-color:transparent}
+body.mode-proxy #term-status{display:flex}
+body.mode-proxy #term-location{max-width:50vw}
+
+body.mode-proxy.overlay-open #terminal-shell{transform:translate(-50%,0);pointer-events:auto}
+body.mode-proxy.overlay-open #term-status{display:none}
+
+/* ─── Responsive ─── */
+@media(max-width:600px){
+  #splash-logo{font-size:2.2rem;letter-spacing:6px}
+  #term-input-row{padding:12px 16px}
+  #quick-links{gap:6px}
+  .qlink{padding:6px 12px;font-size:0.75rem}
+}
