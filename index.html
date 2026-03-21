@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles.css?v=9" />
+    <link rel="stylesheet" href="/styles.css?v=10" />
     <script src="/index.config.js"></script>
     <script src="/surf/baremux/index.js"></script>
     <script src="/surf/scram/scramjet.all.js"></script>
-    <script src="/app.js?v=11" defer></script>
+    <script src="/app.js?v=12" defer></script>
     <title>SPLASH</title>
     <meta name="title" content="SPLASH" />
     <meta name="description" content="a modern web proxy" />
@@ -33,6 +33,17 @@
   </head>
   <body class="mode-terminal">
     <div id="tab-blackout"></div>
+    <div id="add-link-overlay">
+      <div id="add-link-modal">
+        <h3>Add Quick Link</h3>
+        <input class="add-link-input" id="add-link-title" placeholder="Title (e.g. GitHub)" />
+        <input class="add-link-input" id="add-link-url" placeholder="URL (e.g. github.com)" />
+        <div class="add-link-btns">
+          <button class="add-link-cancel" id="add-link-cancel">Cancel</button>
+          <button class="add-link-save" id="add-link-save">Add</button>
+        </div>
+      </div>
+    </div>
     <div id="app">
       <div id="proxy-shell">
         <iframe id="proxy-frame" title="SPLASH Proxy"></iframe>
@@ -58,6 +69,9 @@
         <div class="settings-section-label">Panic URL (ctrl+p)</div>
         <div id="panic-url-setting"></div>
         <div class="settings-divider"></div>
+        <div class="settings-section-label">Background</div>
+        <div id="bg-setting"></div>
+        <div class="settings-divider"></div>
         <div class="settings-section-label">Open in</div>
         <div id="settings-actions"></div>
       </div>
@@ -82,15 +96,7 @@
               <span id="term-cursor-measure" aria-hidden="true"></span>
             </form>
           </div>
-          <div id="quick-links">
-            <a class="qlink" data-url="https://google.com"><span class="qlink-icon">G</span>Google</a>
-            <a class="qlink" data-url="https://youtube.com"><span class="qlink-icon">&#9654;</span>YouTube</a>
-            <a class="qlink" data-url="https://discord.com"><span class="qlink-icon">&#9775;</span>Discord</a>
-            <a class="qlink" data-url="https://reddit.com"><span class="qlink-icon">R</span>Reddit</a>
-            <a class="qlink" data-url="https://tiktok.com"><span class="qlink-icon">&#9834;</span>TikTok</a>
-            <a class="qlink" data-url="https://masonp25.github.io/Calculator/game-site/"><span class="qlink-icon">&#127918;</span>Arcade</a>
-            <a class="qlink" data-url="https://twitch.tv"><span class="qlink-icon">&#9656;</span>Twitch</a>
-          </div>
+          <div id="quick-links"></div>
           <div id="panic-hint">ctrl + p to panic</div>
           <div id="widgets">
             <div id="widget-time"></div>

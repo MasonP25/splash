@@ -1949,9 +1949,18 @@ window.addEventListener("beforeunload", (event) => {
 
 // ─── Tab visibility: black screen when not focused ───
 const tabBlackout = document.getElementById("tab-blackout");
-document.addEventListener("visibilitychange", () => {
-  if (tabBlackout) tabBlackout.classList.toggle("active", document.hidden);
-});
+function setBlackout(hidden) {
+  if (tabBlackout) {
+    if (hidden) {
+      tabBlackout.style.display = "block";
+    } else {
+      tabBlackout.style.display = "none";
+    }
+  }
+}
+document.addEventListener("visibilitychange", () => setBlackout(document.hidden));
+window.addEventListener("blur", () => setBlackout(true));
+window.addEventListener("focus", () => setBlackout(false));
 
 navigator.serviceWorker.addEventListener("controllerchange", () => {
   sendAdblockSetting();
@@ -2153,17 +2162,107 @@ updateCursor();
     .catch(() => {});
 })();
 
-// Quick link click handlers
-document.querySelectorAll("#quick-links .qlink").forEach((link) => {
-  link.addEventListener("click", (e) => {
-    e.preventDefault();
-    const url = link.dataset.url;
-    if (url) {
+// ─── Dynamic Quick Links ───
+const DEFAULT_LINKS = [
+  { title: "Google", url: "https://google.com" },
+  { title: "YouTube", url: "https://youtube.com" },
+  { title: "Discord", url: "https://discord.com" },
+  { title: "Reddit", url: "https://reddit.com" },
+  { title: "TikTok", url: "https://tiktok.com" },
+  { title: "Arcade", url: "https://masonp25.github.io/Calculator/game-site/" },
+  { title: "Twitch", url: "https://twitch.tv" },
+];
+
+function getQuickLinks() {
+  const raw = localStorage.getItem("splash:quickLinks");
+  if (raw) {
+    try { return JSON.parse(raw); } catch (e) {}
+  }
+  return DEFAULT_LINKS.slice();
+}
+
+function saveQuickLinks(links) {
+  localStorage.setItem("splash:quickLinks", JSON.stringify(links));
+}
+
+function renderQuickLinks() {
+  const container = document.getElementById("quick-links");
+  if (!container) return;
+  container.innerHTML = "";
+  const links = getQuickLinks();
+  links.forEach((link, i) => {
+    const el = document.createElement("a");
+    el.className = "qlink";
+    el.textContent = link.title;
+    el.addEventListener("click", (e) => {
+      if (e.target.classList.contains("qlink-x")) return;
+      e.preventDefault();
       const inNewTab = !document.body.classList.contains("mode-proxy") && homeNewTab;
-      openTarget(url, inNewTab);
-    }
+      openTarget(link.url, inNewTab);
+    });
+    const x = document.createElement("button");
+    x.className = "qlink-x";
+    x.textContent = "\u00d7";
+    x.title = "Remove";
+    x.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const current = getQuickLinks();
+      current.splice(i, 1);
+      saveQuickLinks(current);
+      renderQuickLinks();
+    });
+    el.appendChild(x);
+    container.appendChild(el);
   });
+  // Add button (always last, no X)
+  const addBtn = document.createElement("a");
+  addBtn.className = "qlink qlink-add";
+  addBtn.textContent = "+";
+  addBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    openAddLinkModal();
+  });
+  container.appendChild(addBtn);
+}
+
+function openAddLinkModal() {
+  const overlay = document.getElementById("add-link-overlay");
+  const titleInput = document.getElementById("add-link-title");
+  const urlInput = document.getElementById("add-link-url");
+  if (!overlay || !titleInput || !urlInput) return;
+  titleInput.value = "";
+  urlInput.value = "";
+  overlay.classList.add("open");
+  titleInput.focus();
+}
+
+function closeAddLinkModal() {
+  const overlay = document.getElementById("add-link-overlay");
+  if (overlay) overlay.classList.remove("open");
+}
+
+document.getElementById("add-link-cancel")?.addEventListener("click", closeAddLinkModal);
+document.getElementById("add-link-overlay")?.addEventListener("click", (e) => {
+  if (e.target.id === "add-link-overlay") closeAddLinkModal();
 });
+document.getElementById("add-link-save")?.addEventListener("click", () => {
+  const titleInput = document.getElementById("add-link-title");
+  const urlInput = document.getElementById("add-link-url");
+  const title = titleInput?.value.trim();
+  let url = urlInput?.value.trim();
+  if (!title || !url) return;
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    url = "https://" + url;
+  }
+  const links = getQuickLinks();
+  links.push({ title, url });
+  saveQuickLinks(links);
+  renderQuickLinks();
+  closeAddLinkModal();
+});
+
+renderQuickLinks();
 if (proxyWatermark) {
   proxyWatermark.addEventListener("click", () => {
     toggleOverlay();
@@ -2214,6 +2313,54 @@ if (proxyWatermark) {
       setSetting("splash:panicUrl", panicUrl);
     });
     panicUrlSetting.appendChild(input);
+  }
+
+  // Background upload
+  const bgSetting = document.getElementById("bg-setting");
+  if (bgSetting) {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.style.display = "none";
+
+    const uploadBtn = document.createElement("button");
+    uploadBtn.className = "bg-upload-btn";
+    uploadBtn.textContent = "Upload image";
+
+    const resetBtn = document.createElement("button");
+    resetBtn.className = "bg-reset-btn";
+    resetBtn.textContent = "Remove background";
+
+    // Check if a background is already set
+    const savedBg = localStorage.getItem("splash:bgImage");
+    if (savedBg) {
+      document.body.style.background = `url(${savedBg}) center/cover no-repeat fixed`;
+      resetBtn.style.display = "flex";
+    }
+
+    uploadBtn.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        document.body.style.background = `url(${dataUrl}) center/cover no-repeat fixed`;
+        localStorage.setItem("splash:bgImage", dataUrl);
+        resetBtn.style.display = "flex";
+      };
+      reader.readAsDataURL(file);
+      fileInput.value = "";
+    });
+    resetBtn.addEventListener("click", () => {
+      localStorage.removeItem("splash:bgImage");
+      document.body.style.background = "";
+      resetBtn.style.display = "none";
+    });
+
+    bgSetting.appendChild(fileInput);
+    bgSetting.appendChild(uploadBtn);
+    bgSetting.appendChild(resetBtn);
   }
 
   // about:blank opener

@@ -54,9 +54,25 @@ body.mode-proxy #search-btn{display:none}
 
 /* ─── Quick Links ─── */
 #quick-links{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px;max-width:560px}
-.qlink{display:flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;color:#b0b4c8;font-size:0.8rem;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;user-select:none}
+.qlink{position:relative;display:flex;align-items:center;padding:8px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;color:#b0b4c8;font-size:0.8rem;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;user-select:none}
 .qlink:hover{background:rgba(139,122,255,.1);border-color:rgba(139,122,255,.3);color:#e0e4f0;transform:translateY(-1px)}
-.qlink-icon{font-size:0.85rem;width:18px;text-align:center;color:#8b7aff}
+.qlink-x{display:none;position:absolute;top:-6px;right:-6px;width:16px;height:16px;border-radius:50%;background:rgba(255,80,80,.85);color:#fff;font-size:10px;line-height:16px;text-align:center;cursor:pointer;border:none;padding:0}
+.qlink:hover .qlink-x{display:block}
+.qlink-add{background:rgba(139,122,255,.08);border:1px dashed rgba(139,122,255,.3);color:#8b7aff;cursor:pointer;font-size:0.8rem;font-weight:600}
+.qlink-add:hover{background:rgba(139,122,255,.18);border-color:rgba(139,122,255,.5);color:#c0b8ff;transform:translateY(-1px)}
+/* ─── Add Link Modal ─── */
+#add-link-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,20,.85);z-index:10000;align-items:center;justify-content:center}
+#add-link-overlay.open{display:flex}
+#add-link-modal{background:rgba(14,14,22,.97);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;width:280px;box-shadow:0 10px 40px rgba(0,0,0,.5);backdrop-filter:blur(12px)}
+#add-link-modal h3{margin:0 0 14px;font-size:0.95rem;font-weight:600;color:#e0e4f0}
+.add-link-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:9px 12px;color:#e0e4f0;font-size:0.85rem;font-family:"Inter",sans-serif;outline:none;box-sizing:border-box;margin-bottom:10px;transition:border-color .2s}
+.add-link-input:focus{border-color:rgba(139,122,255,.4)}
+.add-link-btns{display:flex;gap:8px;justify-content:flex-end}
+.add-link-btns button{border:none;border-radius:8px;padding:8px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all .15s}
+.add-link-cancel{background:rgba(255,255,255,.06);color:#8b8ba0}
+.add-link-cancel:hover{background:rgba(255,255,255,.1);color:#e0e4f0}
+.add-link-save{background:#8b7aff;color:#fff}
+.add-link-save:hover{background:#a08fff}
 
 /* ─── Settings Button & Panel ─── */
 #settings-btn{position:fixed;top:16px;right:16px;z-index:999;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#8b8ba0;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
@@ -118,6 +134,12 @@ body.mode-proxy #widgets{display:none}
 .panic-url-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:7px 10px;color:#e0e4f0;font-size:0.82rem;font-family:"Inter",sans-serif;outline:none;box-sizing:border-box;transition:border-color .2s}
 .panic-url-input:focus{border-color:rgba(139,122,255,.4)}
 
+/* ─── Settings: Background upload ─── */
+.bg-upload-btn{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:#b0b4c8;font-size:0.82rem;cursor:pointer;transition:all .15s;border:none;background:rgba(255,255,255,.04);width:100%;box-sizing:border-box;font-family:"Inter",sans-serif}
+.bg-upload-btn:hover{background:rgba(255,255,255,.06);color:#e0e4f0}
+.bg-reset-btn{display:none;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:#ff6b6b;font-size:0.82rem;cursor:pointer;transition:all .15s;border:none;background:rgba(255,80,80,.08);width:100%;box-sizing:border-box;font-family:"Inter",sans-serif;margin-top:6px}
+.bg-reset-btn:hover{background:rgba(255,80,80,.15)}
+
 body.mode-proxy #splash-landing{display:none}
 body.mode-proxy #quick-links{display:none}
 
@@ -144,7 +166,6 @@ body.mode-proxy.overlay-open #term-status{display:none}
 
 /* ─── Tab hidden ─── */
 #tab-blackout{position:fixed;inset:0;background:#000;z-index:999999;display:none}
-#tab-blackout.active{display:block}
 
 /* ─── Responsive ─── */
 @media(max-width:600px){
