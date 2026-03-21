@@ -2169,7 +2169,7 @@ const DEFAULT_LINKS = [
   { title: "Discord", url: "https://discord.com" },
   { title: "Reddit", url: "https://reddit.com" },
   { title: "TikTok", url: "https://tiktok.com" },
-  { title: "Arcade", url: "https://masonp25.github.io/Calculator/game-site/" },
+  { title: "Arcade", url: "https://masonp25.github.io/calculator/game-site/index.html" },
   { title: "Twitch", url: "https://twitch.tv" },
 ];
 
