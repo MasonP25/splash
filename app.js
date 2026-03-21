@@ -1656,7 +1656,7 @@ function handleCommand(value) {
     lower === "home";
   appendOutput(
     `${isProcessCommand ? `${processPrompt} ` : `${defaultPrompt} `}${value}`,
-    "#52ff96",
+    "#a0aac0",
   );
 
   if (pendingConfirm) {
@@ -1777,13 +1777,13 @@ function handleCommand(value) {
   }
   if (lower === "cloak list") {
     const current = getSetting("splash:cloak", "") || "default";
-    appendOutput("Available cloaks:", "#a0ffcf");
+    appendOutput("Available cloaks:", "#b0bac8");
     Object.keys(CLOAKS).forEach((id) => {
       const c = CLOAKS[id];
       const marker = id === current ? " [active]" : "";
       appendOutput(`  ${id} — ${c.name}${marker}`);
     });
-    appendOutput('Usage: cloak {name} (e.g. cloak gdocs)', "#d9ffe8");
+    appendOutput('Usage: cloak {name} (e.g. cloak gdocs)', "#9098a8");
     return;
   }
   if (lower.startsWith("cloak ")) {
@@ -1802,7 +1802,7 @@ function handleCommand(value) {
   }
   if (lower === "cloak") {
     const current = getSetting("splash:cloak", "") || "default";
-    appendOutput(`Current cloak: ${current}. Type cloak list for options`, "#a0ffcf");
+    appendOutput(`Current cloak: ${current}. Type cloak list for options`, "#b0bac8");
     return;
   }
   if (lower.startsWith("adblock ")) {
@@ -2321,12 +2321,18 @@ if (proxyWatermark) {
     const savedRgb = getSetting("splash:themeRgb", "") || "139,122,255";
     if (savedTheme !== "#8b7aff") applyTheme(savedTheme, savedRgb);
 
+    function hexToRgbStr(hex) {
+      const h = hex.replace("#", "");
+      return `${parseInt(h.slice(0,2),16)},${parseInt(h.slice(2,4),16)},${parseInt(h.slice(4,6),16)}`;
+    }
+
     function renderThemes() {
       const current = getSetting("splash:themeColor", "") || "#8b7aff";
       themeOptions.innerHTML = "";
       THEMES.forEach((t) => {
         const swatch = document.createElement("button");
-        swatch.className = "theme-swatch" + (t.color === current ? " active" : "");
+        const isPresetActive = t.color === current;
+        swatch.className = "theme-swatch" + (isPresetActive ? " active" : "");
         swatch.style.background = t.color;
         swatch.title = t.name;
         swatch.addEventListener("click", () => {
@@ -2337,6 +2343,27 @@ if (proxyWatermark) {
         });
         themeOptions.appendChild(swatch);
       });
+      // Custom color picker
+      const isCustom = !THEMES.some((t) => t.color === current);
+      const custom = document.createElement("button");
+      custom.className = "theme-swatch theme-swatch-custom" + (isCustom ? " active" : "");
+      custom.title = "Custom color";
+      const colorInput = document.createElement("input");
+      colorInput.type = "color";
+      colorInput.className = "theme-color-input";
+      colorInput.value = isCustom ? current : "#8b7aff";
+      colorInput.addEventListener("input", () => {
+        const color = colorInput.value;
+        const rgb = hexToRgbStr(color);
+        applyTheme(color, rgb);
+        setSetting("splash:themeColor", color);
+        setSetting("splash:themeRgb", rgb);
+        // Update active states
+        themeOptions.querySelectorAll(".theme-swatch").forEach((s) => s.classList.remove("active"));
+        custom.classList.add("active");
+      });
+      custom.appendChild(colorInput);
+      themeOptions.appendChild(custom);
     }
     renderThemes();
   }
