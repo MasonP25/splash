@@ -143,8 +143,8 @@ body.mode-proxy.overlay-open #terminal-shell{transform:translate(-50%,0);pointer
 body.mode-proxy.overlay-open #term-status{display:none}
 
 /* ─── Tab hidden ─── */
-body.tab-hidden #app{visibility:hidden}
-body.tab-hidden{background:#000 !important}
+#tab-blackout{position:fixed;inset:0;background:#000;z-index:999999;display:none}
+#tab-blackout.active{display:block}
 
 /* ─── Responsive ─── */
 @media(max-width:600px){

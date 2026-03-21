@@ -1948,8 +1948,9 @@ window.addEventListener("beforeunload", (event) => {
 });
 
 // ─── Tab visibility: black screen when not focused ───
+const tabBlackout = document.getElementById("tab-blackout");
 document.addEventListener("visibilitychange", () => {
-  document.body.classList.toggle("tab-hidden", document.hidden);
+  if (tabBlackout) tabBlackout.classList.toggle("active", document.hidden);
 });
 
 navigator.serviceWorker.addEventListener("controllerchange", () => {
