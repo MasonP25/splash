@@ -1947,6 +1947,11 @@ window.addEventListener("beforeunload", (event) => {
   event.returnValue = "";
 });
 
+// ─── Tab visibility: black screen when not focused ───
+document.addEventListener("visibilitychange", () => {
+  document.body.classList.toggle("tab-hidden", document.hidden);
+});
+
 navigator.serviceWorker.addEventListener("controllerchange", () => {
   sendAdblockSetting();
 });

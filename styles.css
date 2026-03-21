@@ -142,6 +142,10 @@ body.mode-proxy #term-location{max-width:50vw}
 body.mode-proxy.overlay-open #terminal-shell{transform:translate(-50%,0);pointer-events:auto}
 body.mode-proxy.overlay-open #term-status{display:none}
 
+/* ─── Tab hidden ─── */
+body.tab-hidden #app{visibility:hidden}
+body.tab-hidden{background:#000 !important}
+
 /* ─── Responsive ─── */
 @media(max-width:600px){
   #splash-logo{font-size:2.2rem;letter-spacing:6px}
