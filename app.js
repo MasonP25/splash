@@ -475,7 +475,7 @@ function openInFrame(url) {
 function setHashFromUrl(url) {
   const target = encodeTarget(url);
   if (window.location.hash.replace(/^#/, "") !== target) {
-    window.location.hash = target;
+    history.replaceState(null, "", "#" + target);
   }
 }
 
