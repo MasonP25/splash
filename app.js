@@ -2095,7 +2095,7 @@ updatePrompt();
 focusInput();
 updateCursor();
 
-// ─── Rotating taglines ───
+// ─── Typing taglines ───
 (function initTaglines() {
   const taglines = [
     "Browse the internet.",
@@ -2106,15 +2106,44 @@ updateCursor();
   ];
   const el = document.getElementById("splash-tagline");
   if (!el) return;
+  const cursor = document.createElement("span");
+  cursor.className = "cursor";
   let idx = 0;
-  setInterval(() => {
-    el.style.opacity = "0";
-    setTimeout(() => {
+  let text = taglines[0];
+  let charIdx = text.length;
+  el.textContent = text;
+  el.appendChild(cursor);
+
+  const TYPE_SPEED = 60;
+  const DELETE_SPEED = 35;
+  const PAUSE_AFTER_TYPE = 2500;
+  const PAUSE_AFTER_DELETE = 400;
+
+  function typeNext() {
+    text = taglines[idx];
+    if (charIdx < text.length) {
+      charIdx++;
+      el.textContent = text.slice(0, charIdx);
+      el.appendChild(cursor);
+      setTimeout(typeNext, TYPE_SPEED);
+    } else {
+      setTimeout(deleteText, PAUSE_AFTER_TYPE);
+    }
+  }
+
+  function deleteText() {
+    if (charIdx > 0) {
+      charIdx--;
+      el.textContent = text.slice(0, charIdx);
+      el.appendChild(cursor);
+      setTimeout(deleteText, DELETE_SPEED);
+    } else {
       idx = (idx + 1) % taglines.length;
-      el.textContent = taglines[idx];
-      el.style.opacity = "1";
-    }, 400);
-  }, 4000);
+      setTimeout(typeNext, PAUSE_AFTER_DELETE);
+    }
+  }
+
+  setTimeout(deleteText, PAUSE_AFTER_TYPE);
 })();
 
 // ─── Time & Weather widgets ───
