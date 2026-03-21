@@ -2107,11 +2107,18 @@ async function init() {
 
   // Tab & nav bar controls
   tabAddBtn.addEventListener("click", () => {
+    // Save current tab state before switching
+    const prev = tabs.find(t => t.id === activeTabId);
+    if (prev) prev.url = getDecodedLocation() || currentTarget || prev.url;
     const tab = createTab("");
-    goHome();
     activeTabId = tab.id;
+    currentTarget = "";
+    frame.src = "about:blank";
+    updateNavUrl("");
     renderTabs();
-    updateMode("mode-terminal");
+    // Open overlay so user can type a URL
+    if (!overlayOpen) toggleOverlay();
+    setOverlayInput("");
     focusInput();
   });
   navBack.addEventListener("click", () => {
