@@ -29,7 +29,7 @@ body{background:radial-gradient(ellipse at top,#12121f 0%,#0a0a0f 60%,#050508 10
 #splash-logo{font-size:3.2rem;font-weight:700;letter-spacing:10px;background:linear-gradient(135deg,#8b7aff 0%,#6ee7b7 50%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;user-select:none}
 #splash-tagline{font-size:0.9rem;color:#6b6b80;letter-spacing:.1em}
 
-#term-output{width:100%;max-width:560px;overflow-y:auto;font-size:14px;line-height:1.6;scrollbar-width:none;font-family:"Ubuntu Mono",monospace}
+#term-output{width:100%;max-width:560px;overflow:visible;font-size:14px;line-height:1.6;scrollbar-width:none;font-family:"Ubuntu Mono",monospace}
 #term-output::-webkit-scrollbar{width:0;height:0}
 
 #term-status{display:none;gap:8px;font-size:13px;color:#8b8ba0;margin-bottom:8px}
@@ -43,6 +43,9 @@ body{background:radial-gradient(ellipse at top,#12121f 0%,#0a0a0f 60%,#050508 10
 #term-prefix{color:#8b7aff;font-family:"Ubuntu Mono",monospace}
 #term-input{flex:1;background:transparent;border:none;outline:none;color:#e8eaf0;font-size:15px;font-family:"Inter",sans-serif;margin-left:0;caret-color:#8b7aff}
 #term-input::placeholder{color:#4a4a5a}
+#search-btn{background:none;border:none;color:#4a4a5a;cursor:pointer;padding:0 0 0 8px;display:flex;align-items:center;transition:color .2s}
+#search-btn:hover{color:#8b7aff}
+body.mode-proxy #search-btn{display:none}
 
 #term-cursor{position:absolute;top:50%;width:.62em;height:1.2em;background:#8b7aff;transform:translateY(-50%);pointer-events:none;animation:cursorBlink 1.1s steps(1) infinite}
 #term-cursor.hidden{opacity:0;animation:none}
@@ -113,7 +116,7 @@ body.mode-proxy #terminal-shell{
   backdrop-filter:blur(12px)
 }
 body.mode-proxy #term{justify-content:flex-start;align-items:stretch;padding:16px 20px 14px}
-body.mode-proxy #term-output{max-width:none}
+body.mode-proxy #term-output{max-width:none;overflow-y:auto}
 body.mode-proxy #term-input-row{max-width:none;background:transparent;border:none;border-radius:0;padding:0;margin-top:6px}
 body.mode-proxy #term-input-row:focus-within{box-shadow:none;border-color:transparent}
 body.mode-proxy #term-prefix{display:inline;color:#8b7aff;font-family:"Ubuntu Mono",monospace}
