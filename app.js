@@ -107,10 +107,12 @@ function createTab(url) {
   return tab;
 }
 
+let switchingTab = false;
 function switchTab(id) {
   const tab = tabs.find(t => t.id === id);
   if (!tab) return;
   if (id === activeTabId) return;
+  switchingTab = true;
   // Save current tab state
   const prev = tabs.find(t => t.id === activeTabId);
   if (prev) {
@@ -122,6 +124,7 @@ function switchTab(id) {
   renderTabs();
   if (tab.url) {
     updateMode("mode-proxy");
+    currentTarget = tab.url;
     setHashFromUrl(tab.url);
     openInFrame(tab.url);
     updateNavUrl(tab.url);
@@ -135,6 +138,7 @@ function switchTab(id) {
     termOutput.innerHTML = "";
     focusInput();
   }
+  setTimeout(() => { switchingTab = false; }, 100);
 }
 
 function closeTab(id) {
@@ -544,7 +548,7 @@ function normalizeUrl(input) {
   let url = input.trim();
   if (!url) return "";
   if (!url.includes(".")) {
-    return "https://www.google.com/search?q=" + encodeURIComponent(url);
+    return "https://search.brave.com/search?q=" + encodeURIComponent(url);
   }
   if (!url.startsWith("http://") && !url.startsWith("https://")) {
     url = "https://" + url;
@@ -2193,6 +2197,7 @@ async function init() {
 }
 
 window.addEventListener("hashchange", () => {
+  if (switchingTab) return;
   const token = window.location.hash.replace(/^#/, "");
   if (!token) {
     if (tabs.length > 0) {
