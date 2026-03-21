@@ -1,8 +1,8 @@
 @import"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Ubuntu+Mono:wght@400;700&display=swap";
 
-:root{--accent:#8b7aff;--accent-rgb:139,122,255}
+:root{--accent:#e0e4f0;--accent-rgb:224,228,240}
 html,body{height:100%;margin:0;background:#0a0a0f;font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;color:#e0e4f0}
-body{background:radial-gradient(ellipse at top,#12121f 0%,#0a0a0f 60%,#050508 100%)}
+body{background:url(pexels-simon73-1183099.jpg) center/cover no-repeat fixed}
 
 #app{position:fixed;inset:0;overflow:auto}
 
@@ -83,8 +83,13 @@ body.mode-proxy #search-btn{display:none}
 #settings-panel{display:none;position:fixed;top:66px;right:16px;z-index:1000;width:220px;max-height:420px;overflow-y:auto;background:rgba(14,14,22,.97);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;box-shadow:0 10px 40px rgba(0,0,0,.5);backdrop-filter:blur(12px);scrollbar-width:none}
 #settings-panel::-webkit-scrollbar{width:0}
 .settings-header{font-size:0.95rem;font-weight:600;color:#e0e4f0;margin-bottom:12px}
-.settings-section-label{font-size:0.7rem;color:rgba(var(--accent-rgb),.45);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;margin-top:4px}
-.settings-divider{border-top:1px solid rgba(255,255,255,.06);margin:10px 0}
+.settings-section{border-top:1px solid rgba(255,255,255,.06)}
+.settings-section:first-of-type{border-top:none}
+.settings-section-label{font-size:0.7rem;color:rgba(var(--accent-rgb),.45);text-transform:uppercase;letter-spacing:.08em;padding:10px 0;cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none}
+.section-arrow{font-size:0.65rem;transition:transform .2s ease}
+.settings-section.collapsed .section-arrow{transform:rotate(-90deg)}
+.settings-section-body{overflow:hidden;transition:max-height .25s ease,opacity .2s ease;max-height:500px;opacity:1;padding-bottom:6px}
+.settings-section.collapsed .settings-section-body{max-height:0;opacity:0;padding-bottom:0}
 .cloak-option{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:rgba(var(--accent-rgb),.65);font-size:0.82rem;cursor:pointer;transition:all .15s;border:2px solid transparent}
 .cloak-option:hover{background:rgba(255,255,255,.05)}
 .cloak-option.active{border-color:var(--accent);color:#e0e4f0}
@@ -143,7 +148,8 @@ body.mode-proxy #widgets{display:none}
 .theme-swatch{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all .15s;padding:0}
 .theme-swatch:hover{transform:scale(1.15)}
 .theme-swatch.active{border-color:#fff;box-shadow:0 0 8px rgba(255,255,255,.3)}
-.theme-swatch-custom{background:conic-gradient(red,yellow,lime,aqua,blue,magenta,red) !important;position:relative;overflow:hidden}
+.theme-swatch-custom{background:rgba(255,255,255,.1) !important;position:relative;overflow:hidden;font-size:18px;color:rgba(var(--accent-rgb),.6);display:flex;align-items:center;justify-content:center}
+.theme-swatch-custom::before{content:"+";position:relative;z-index:1;pointer-events:none}
 .theme-color-input{position:absolute;inset:-4px;opacity:0;cursor:pointer;width:calc(100% + 8px);height:calc(100% + 8px);border:none;padding:0;border-radius:50%}
 
 .bg-upload-btn{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:rgba(var(--accent-rgb),.65);font-size:0.82rem;cursor:pointer;transition:all .15s;border:none;background:rgba(255,255,255,.04);width:100%;box-sizing:border-box;font-family:"Inter",sans-serif}

@@ -7,11 +7,11 @@
     <meta name="theme-color" content="#0a0a0f" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="stylesheet" href="/styles.css?v=14" />
+    <link rel="stylesheet" href="/styles.css?v=15" />
     <script src="/index.config.js"></script>
     <script src="/surf/baremux/index.js"></script>
     <script src="/surf/scram/scramjet.all.js"></script>
-    <script src="/app.js?v=19" defer></script>
+    <script src="/app.js?v=20" defer></script>
     <title>SPLASH</title>
     <meta name="title" content="SPLASH" />
     <meta name="description" content="a modern web proxy" />
@@ -67,20 +67,26 @@
         <div class="settings-header">
           <span>Settings</span>
         </div>
-        <div class="settings-section-label">Tab Cloak</div>
-        <div id="cloak-options"></div>
-        <div class="settings-divider"></div>
-        <div class="settings-section-label">Panic URL (ctrl+p)</div>
-        <div id="panic-url-setting"></div>
-        <div class="settings-divider"></div>
-        <div class="settings-section-label">Color Theme</div>
-        <div id="theme-options"></div>
-        <div class="settings-divider"></div>
-        <div class="settings-section-label">Background</div>
-        <div id="bg-setting"></div>
-        <div class="settings-divider"></div>
-        <div class="settings-section-label">Open in</div>
-        <div id="settings-actions"></div>
+        <div class="settings-section">
+          <div class="settings-section-label">Tab Cloak <span class="section-arrow">&#9662;</span></div>
+          <div class="settings-section-body"><div id="cloak-options"></div></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-label">Panic URL (ctrl+p) <span class="section-arrow">&#9662;</span></div>
+          <div class="settings-section-body"><div id="panic-url-setting"></div></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-label">Color Theme <span class="section-arrow">&#9662;</span></div>
+          <div class="settings-section-body"><div id="theme-options"></div></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-label">Background <span class="section-arrow">&#9662;</span></div>
+          <div class="settings-section-body"><div id="bg-setting"></div></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-label">Open in <span class="section-arrow">&#9662;</span></div>
+          <div class="settings-section-body"><div id="settings-actions"></div></div>
+        </div>
       </div>
       <div id="terminal-shell">
         <div id="term">

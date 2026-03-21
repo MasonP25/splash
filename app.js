@@ -2334,9 +2334,9 @@ if (proxyWatermark) {
 
   const themeOptions = document.getElementById("theme-options");
   if (themeOptions) {
-    const savedTheme = getSetting("splash:themeColor", "") || "#8b7aff";
-    const savedRgb = getSetting("splash:themeRgb", "") || "139,122,255";
-    if (savedTheme !== "#8b7aff") applyTheme(savedTheme, savedRgb);
+    const savedTheme = getSetting("splash:themeColor", "") || "#e0e4f0";
+    const savedRgb = getSetting("splash:themeRgb", "") || "224,228,240";
+    if (savedTheme !== "#e0e4f0") applyTheme(savedTheme, savedRgb);
 
     function hexToRgbStr(hex) {
       const h = hex.replace("#", "");
@@ -2421,10 +2421,13 @@ if (proxyWatermark) {
     resetBtn.textContent = "Remove background";
 
     // Check if a background is already set
+    const DEFAULT_BG = "pexels-simon73-1183099.jpg";
     const savedBg = localStorage.getItem("splash:bgImage");
     if (savedBg) {
       document.body.style.background = `url(${savedBg}) center/cover no-repeat fixed`;
       resetBtn.style.display = "flex";
+    } else {
+      document.body.style.background = `url(${DEFAULT_BG}) center/cover no-repeat fixed`;
     }
 
     uploadBtn.addEventListener("click", () => fileInput.click());
@@ -2443,7 +2446,7 @@ if (proxyWatermark) {
     });
     resetBtn.addEventListener("click", () => {
       localStorage.removeItem("splash:bgImage");
-      document.body.style.background = "";
+      document.body.style.background = `url(${DEFAULT_BG}) center/cover no-repeat fixed`;
       resetBtn.style.display = "none";
     });
 
@@ -2481,6 +2484,13 @@ if (proxyWatermark) {
   }
 
   // Toggle panel
+  // Collapsible settings sections
+  settingsPanel.querySelectorAll(".settings-section-label").forEach(label => {
+    label.addEventListener("click", () => {
+      label.parentElement.classList.toggle("collapsed");
+    });
+  });
+
   settingsBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     const open = settingsPanel.style.display === "block";
