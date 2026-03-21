@@ -527,7 +527,7 @@ function normalizeUrl(input) {
   let url = input.trim();
   if (!url) return "";
   if (!url.includes(".")) {
-    return "https://search.brave.com/search?q=" + encodeURIComponent(url);
+    return "https://www.google.com/search?q=" + encodeURIComponent(url);
   }
   if (!url.startsWith("http://") && !url.startsWith("https://")) {
     url = "https://" + url;
