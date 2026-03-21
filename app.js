@@ -110,16 +110,30 @@ function createTab(url) {
 function switchTab(id) {
   const tab = tabs.find(t => t.id === id);
   if (!tab) return;
+  if (id === activeTabId) return;
   // Save current tab state
   const prev = tabs.find(t => t.id === activeTabId);
   if (prev) {
     prev.url = getDecodedLocation() || currentTarget || prev.url;
   }
   activeTabId = id;
+  overlayOpen = false;
+  document.body.classList.remove("overlay-open");
   renderTabs();
   if (tab.url) {
+    updateMode("mode-proxy");
+    setHashFromUrl(tab.url);
     openInFrame(tab.url);
     updateNavUrl(tab.url);
+  } else {
+    currentTarget = "";
+    lastHashValue = "";
+    if (window.location.hash) history.replaceState(null, "", "/");
+    frame.src = "about:blank";
+    updateNavUrl("");
+    updateMode("mode-terminal");
+    termOutput.innerHTML = "";
+    focusInput();
   }
 }
 
@@ -141,6 +155,9 @@ function closeTab(id) {
 
 function renderTabs() {
   tabList.innerHTML = "";
+  const hasTabs = tabs.length > 0;
+  document.getElementById("tab-bar").classList.toggle("has-tabs", hasTabs);
+  document.body.classList.toggle("has-tabs", hasTabs);
   tabs.forEach(tab => {
     const el = document.createElement("button");
     el.className = "tab" + (tab.id === activeTabId ? " active" : "");
@@ -581,9 +598,11 @@ function openTarget(raw, inNewTab) {
   }
   if (tabs.length === 0) createTab(url);
   else { const t = tabs.find(t => t.id === activeTabId); if (t) t.url = url; }
+  updateMode("mode-proxy");
   setHashFromUrl(url);
   openInFrame(url);
   updateNavUrl(url);
+  renderTabs();
 }
 
 async function setWispUrl(next) {
@@ -1276,6 +1295,9 @@ function goHome() {
   if (window.location.pathname !== "/" || window.location.hash) {
     history.replaceState(null, "", "/");
   }
+  tabs.length = 0;
+  activeTabId = null;
+  renderTabs();
   updateMode("mode-terminal");
   frame.src = "about:blank";
   setOverlayInput("");
@@ -2113,12 +2135,15 @@ async function init() {
     const tab = createTab("");
     activeTabId = tab.id;
     currentTarget = "";
+    lastHashValue = "";
+    if (window.location.hash) history.replaceState(null, "", "/");
     frame.src = "about:blank";
     updateNavUrl("");
+    overlayOpen = false;
+    document.body.classList.remove("overlay-open");
+    updateMode("mode-terminal");
+    termOutput.innerHTML = "";
     renderTabs();
-    // Open overlay so user can type a URL
-    if (!overlayOpen) toggleOverlay();
-    setOverlayInput("");
     focusInput();
   });
   navBack.addEventListener("click", () => {
@@ -2170,7 +2195,19 @@ async function init() {
 window.addEventListener("hashchange", () => {
   const token = window.location.hash.replace(/^#/, "");
   if (!token) {
-    goHome();
+    if (tabs.length > 0) {
+      // Stay on tab bar, just show current tab as blank
+      const tab = tabs.find(t => t.id === activeTabId);
+      if (tab) tab.url = "";
+      currentTarget = "";
+      frame.src = "about:blank";
+      updateMode("mode-terminal");
+      termOutput.innerHTML = "";
+      renderTabs();
+      focusInput();
+    } else {
+      goHome();
+    }
     return;
   }
   const injected = splashAllowInject ? getInjectedTarget(token) : null;
