@@ -13,7 +13,7 @@ window.SPLASH_CONFIG = window.SPLASH_CONFIG || {
       },
       {
         name: "description",
-        content: "a modern web proxy with terminal-like interface",
+        content: "a modern web tool with terminal-like interface",
       },
       {
         property: "og:type",
@@ -29,7 +29,7 @@ window.SPLASH_CONFIG = window.SPLASH_CONFIG || {
       },
       {
         property: "og:description",
-        content: "a modern web proxy with terminal-like interface",
+        content: "a modern web tool with terminal-like interface",
       },
       {
         property: "og:image",
@@ -49,7 +49,7 @@ window.SPLASH_CONFIG = window.SPLASH_CONFIG || {
       },
       {
         property: "twitter:description",
-        content: "a modern web proxy with terminal-like interface",
+        content: "a modern web tool with terminal-like interface",
       },
       {
         property: "twitter:image",
