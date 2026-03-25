@@ -8,59 +8,28 @@
   iframe { width: 100%; height: 100%; border: none; }
   .loading { display: flex; align-items: center; justify-content: center; height: 100%; color: #888; font-family: sans-serif; font-size: 14px; }
 </style>
-<script src="/index.config.js"></script>
-<script src="/surf/baremux/index.js"></script>
-<script src="/surf/scram/scramjet.all.js"></script>
 </head>
 <body>
 <div class="loading" id="loading">Loading...</div>
 <iframe id="frame" style="display:none;" allow="autoplay; fullscreen" allowfullscreen></iframe>
 <script>
-(async () => {
-  const params = new URLSearchParams(location.search);
-  const targetUrl = params.get("url");
+(function() {
+  var params = new URLSearchParams(location.search);
+  var targetUrl = params.get("url");
   if (!targetUrl) { document.getElementById("loading").textContent = "No URL provided"; return; }
 
-  // Register service worker
-  await navigator.serviceWorker.register("/splash/sw.js");
-  await navigator.serviceWorker.ready;
-
-  // Set up transport
-  const splashConfig = window.SPLASH_CONFIG || {};
-  const defaultWisp = (splashConfig.wisp && splashConfig.wisp.default) ? splashConfig.wisp.default : "wss://wisp.rhw.one/wisp/";
-  const connection = new BareMux.BareMuxConnection("/surf/baremux/worker.js");
-
-  // Try local wisp first, fallback to default
-  let wispUrl = defaultWisp;
-  try {
-    const localWisp = `wss://${location.host}/wisp/`;
-    const ws = new WebSocket(localWisp);
-    await new Promise((resolve, reject) => {
-      const t = setTimeout(() => { try { ws.close(); } catch(e){} reject(); }, 2000);
-      ws.onopen = () => { clearTimeout(t); ws.close(); wispUrl = localWisp; resolve(); };
-      ws.onerror = () => { clearTimeout(t); reject(); };
-    });
-  } catch(e) {}
-
-  await connection.setTransport("/surf/libcurl/index.mjs", [{ websocket: wispUrl }]);
-
-  // Init scramjet
-  const { ScramjetController } = $scramjetLoadController();
-  const engine = new ScramjetController({
-    files: {
-      all: "/surf/scram/scramjet.all.js",
-      wasm: "/surf/scram/scramjet.wasm.wasm",
-      sync: "/surf/scram/scramjet.sync.js",
-    },
-    prefix: "/splash/surf/",
-  });
-  await engine.init();
-
-  // Load the target URL
-  const frame = document.getElementById("frame");
-  frame.src = engine.encodeUrl(targetUrl);
-  frame.style.display = "";
-  document.getElementById("loading").style.display = "none";
+  // Just load the full Splash app with the URL injected via hash
+  var frame = document.getElementById("frame");
+  frame.src = location.origin + "/#inject=" + encodeURIComponent(targetUrl);
+  frame.onload = function() {
+    document.getElementById("loading").style.display = "none";
+    frame.style.display = "";
+  };
+  // Fallback — show after 5 seconds regardless
+  setTimeout(function() {
+    document.getElementById("loading").style.display = "none";
+    frame.style.display = "";
+  }, 5000);
 })();
 </script>
 </body></html>
