@@ -211,6 +211,13 @@ const CLOAKS = {
   deltamath: { name: "DeltaMath", icon: "\uD83D\uDCC8", title: "DeltaMath", favicon: "https://www.deltamath.com/favicon.ico" },
   khan: { name: "Khan Academy", icon: "\uD83D\uDFE2", title: "Khan Academy | Free Online Courses", favicon: "https://cdn.kastatic.org/images/favicon.ico" },
   wikipedia: { name: "Wikipedia", icon: "\uD83D\uDCD6", title: "Wikipedia, the free encyclopedia", favicon: "https://en.wikipedia.org/static/favicon/wikipedia.ico" },
+  managebac: { name: "ManageBac", icon: "\uD83C\uDF10", title: "ManageBac", favicon: "https://www.managebac.com/favicon.ico" },
+  gmail: { name: "Gmail", icon: "\u2709\uFE0F", title: "Inbox - Gmail", favicon: "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" },
+  mathia: { name: "Mathia", icon: "\uD83D\uDCB9", title: "Mathia", favicon: "https://mathia.carnegielearning.com/favicon.ico" },
+  drive: { name: "Google Drive", icon: "\uD83D\uDCC1", title: "My Drive - Google Drive", favicon: "https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png" },
+  schoology: { name: "Schoology", icon: "\uD83D\uDCDA", title: "Home | Schoology", favicon: "https://app.schoology.com/sites/all/themes/flavor/favicon.ico" },
+  edpuzzle: { name: "Edpuzzle", icon: "\uD83C\uDFAC", title: "Edpuzzle", favicon: "https://edpuzzle.imgix.net/favicons/favicon-32.png" },
+  zoom: { name: "Zoom", icon: "\uD83D\uDCF9", title: "Zoom Meeting", favicon: "https://st1.zoom.us/zoom.ico" },
 };
 
 function applySplashCloak(id) {
